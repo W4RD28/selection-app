@@ -2,6 +2,10 @@
   import { Button, Heading, P, List, Li } from "flowbite-svelte";
 </script>
 
+<svelte:head>
+  <title>Ujian</title>
+</svelte:head>
+
 <div class="justify-center">
   <Heading tag="h2" class="mb-6">Halaman ujian</Heading>
   <P class="mb-6 text-red-700">Status: Anda belum melakukan ujian ini</P>
@@ -15,4 +19,5 @@
     </List>
   </div>
   <Button href="/exam/questions/1" class="mt-6 mb-6" color="light">Laksanakan Ujian</Button>
+  <Button href="/exam/result" class="mt-6 mb-6" color="light">Lihat Hasil Ujian</Button>
 </div>

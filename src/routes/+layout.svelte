@@ -20,7 +20,7 @@
   });
 </script>
 
-<Navbar color="form">
+<Navbar rounded color="form">
   <NavBrand href="/" class="text-2xl"><Img alt="GoodCode logo" src={logo} size="max-w-xs"/></NavBrand>
   <NavHamburger />
 
@@ -30,10 +30,10 @@
     <NavHamburger/>
   </div>
   <NavUl>
+    <NavLi href="/questionnaire">Kuesioner</NavLi>
     <NavLi href="/exam">Ujian</NavLi>
     <NavLi href="/interview">Wawancara</NavLi>
     <NavLi href="/about">Tentang</NavLi>
-    <NavLi href="/contact">Kontak</NavLi>
   </NavUl>
 </Navbar>
 
