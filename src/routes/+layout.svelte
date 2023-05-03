@@ -7,11 +7,35 @@
   import logo from "../logo.svg"
   import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Img, Footer, FooterCopyright, FooterIcon } from 'flowbite-svelte'
 
+  const getSession = async () => {
+    let { data, error } = await supabase.auth.getSession();
+    if (error) console.log("error", error);
+    if (data != null) return data.session;
+  };
+  const getUser = async () => {
+    let { data, error } = await supabase.auth.getUser();
+    if (error) console.log("error", error);
+    if (data != null) return data.user;
+  }
+
+  let session = getSession()
+  let user = getUser()
+
+  const logOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) console.log("error", error);
+    
+    // let user = getUser()
+    // console.log(user)
+
+    window.location.href = "/";
+  }
+
   onMount(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      invalidate("supabase:auth");
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log(event, session, user)
     });
 
     return () => {
@@ -24,11 +48,18 @@
   <NavBrand href="/" class="text-2xl"><Img alt="GoodCode logo" src={logo} size="max-w-xs"/></NavBrand>
   <NavHamburger />
 
-  <div class="flex md:order-2 space-x-2.5">
-    <Button size="md" color="light" href="/login">Login</Button>
-    <Button size="md" color="dark" href="/register">Daftar</Button>
-    <NavHamburger/>
-  </div>
+  <!-- {#if (user != null && user != undefined)}
+    <div class="flex md:order-2 space-x-2.5">
+      <Button size="md" color="light" href="/profile">Profile</Button>
+      <Button size="md" color="dark" on:click={logOut}>Logout</Button>
+    </div>
+  {:else} -->
+    <div class="flex md:order-2 space-x-2.5">
+      <Button size="md" color="light" href="/login">Login</Button>
+      <Button size="md" color="dark" href="/register">Daftar</Button>
+      <Button size="md" color="dark" on:click={logOut}>Logout</Button>
+    </div>
+  <!-- {/if} -->
   <NavUl>
     <NavLi href="/questionnaire">Kuesioner</NavLi>
     <NavLi href="/exam">Ujian</NavLi>

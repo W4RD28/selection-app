@@ -23,7 +23,7 @@
       loading = true
       const { data, error } = await supabase
         .from('questionnaire')
-        .insert([
+        .insert(
           {
             user_id,
             category,
@@ -33,15 +33,18 @@
             alasan,
             harapan,
             akses_laptop,
-          },
-        ])
+          }
+        )
+        .select('*')
+      
+        console.log(data, error)
     }
     catch (error) {
       alert("Jawaban Anda belum sesuai")
     }
     finally {
       loading = false
-      redirect(302, '/questionnaire/thanks')
+      throw redirect(302, '/questionnaire/thanks')
     }
   }
 </script>

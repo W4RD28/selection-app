@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Heading, Input, Fileupload, Label, Helper, Button, Checkbox, A } from 'flowbite-svelte'
   import { supabase } from '$lib/supabaseClient';
+  import { redirect } from '@sveltejs/kit';
 
   let loading = false
   let email: string
@@ -49,8 +50,8 @@
       if (error) throw error
 
       const { data } = await supabase
-        .from('users')
-        .insert([
+        .from('Users')
+        .insert(
           { 
             id: getUserId(),
             first_name,
@@ -61,8 +62,8 @@
             kota,
             kecamatan,
             kelurahan,
-          },
-        ])
+          }
+        )
       if (error) throw error
     } catch (error) {
       if (error instanceof Error) {
@@ -71,6 +72,7 @@
     } finally {
       alert("Registrasi berhasil, silahkan cek email anda untuk verifikasi akun")
       loading = false
+      window.location.href = "/"
     }
   }
 

@@ -21,7 +21,7 @@
       }
     } finally {
       loading = false
-      redirect(302, '/dashboard')
+      throw redirect(303, '/dashboard')
     }
   }
 </script>

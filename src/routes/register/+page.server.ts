@@ -3,8 +3,8 @@ import { supabase } from "$lib/supabaseClient";
 
 // redirect if there is session
 export async function load() {
-  const { data, error } = await supabase.auth.getSession();
-  if (data) {
+  const { data, error } = await supabase.auth.getUser();
+  if (data.user != null) {
     throw redirect(302, "/dashboard");
   }
 }
