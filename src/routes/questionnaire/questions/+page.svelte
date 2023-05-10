@@ -1,15 +1,18 @@
 <script lang="ts">
   import { Heading, Input, Textarea, Label, Button, Checkbox, A, Radio } from 'flowbite-svelte'
   import { supabase } from '$lib/supabaseClient';
-  import { redirect } from '@sveltejs/kit';
+  import { error, redirect } from '@sveltejs/kit';
 
-  const getUserId = async () => {
+  const getUserId = async (): Promise<string> => {
     const { data: {user} } = await supabase.auth.getUser()
-    return user?.id
+    if (user === undefined) {
+      throw new Error()
+    }
+    return user_id = user?.id
   }
 
   let loading = false
-  let user_id = getUserId()
+  let user_id: string = getUserId()
   let category: string
   let disability: string
   let disability_type: string
@@ -21,30 +24,31 @@
   const handleSubmit = async () => {
     try {
       loading = true
-      const { data, error } = await supabase
+      let data = {
+        user_id,
+        category,
+        disability,
+        disability_type,
+        pendapatan,
+        alasan,
+        harapan,
+        akses_laptop,
+      }
+
+      console.log(data)
+      const { error } = await supabase
         .from('questionnaire')
-        .insert(
-          {
-            user_id,
-            category,
-            disability,
-            disability_type,
-            pendapatan,
-            alasan,
-            harapan,
-            akses_laptop,
-          }
-        )
-        .select('*')
+        .insert(data)
+        .select()
       
-        console.log(data, error)
+      console.log(data, error)
     }
     catch (error) {
       alert("Jawaban Anda belum sesuai")
     }
     finally {
       loading = false
-      throw redirect(302, '/questionnaire/thanks')
+      window.location.href = "/questionnaire/thanks"
     }
   }
 </script>

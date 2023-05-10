@@ -5,20 +5,16 @@
   import { onMount } from "svelte";
   import "./styles.css";
   import logo from "../logo.svg"
+  import type { LayoutData } from "./$types"
   import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Img, Footer, FooterCopyright, FooterIcon } from 'flowbite-svelte'
 
-  const getSession = async () => {
-    let { data, error } = await supabase.auth.getSession();
-    if (error) console.log("error", error);
-    if (data != null) return data.session;
-  };
+  export let data : LayoutData
+
   const getUser = async () => {
     let { data, error } = await supabase.auth.getUser();
     if (error) console.log("error", error);
     if (data != null) return data.user;
   }
-
-  let session = getSession()
   let user = getUser()
 
   const logOut = async () => {
@@ -28,13 +24,14 @@
     // let user = getUser()
     // console.log(user)
 
-    window.location.href = "/";
+    window.location.href = "/login";
   }
 
   onMount(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
+      invalidate('supabase:auth')
       console.log(event, session, user)
     });
 
@@ -48,18 +45,17 @@
   <NavBrand href="/" class="text-2xl"><Img alt="GoodCode logo" src={logo} size="max-w-xs"/></NavBrand>
   <NavHamburger />
 
-  <!-- {#if (user != null && user != undefined)}
+  {#if (data.session)}
     <div class="flex md:order-2 space-x-2.5">
-      <Button size="md" color="light" href="/profile">Profile</Button>
+      <Button size="md" color="light" href="/profile">Profil</Button>
       <Button size="md" color="dark" on:click={logOut}>Logout</Button>
     </div>
-  {:else} -->
+  {:else}
     <div class="flex md:order-2 space-x-2.5">
       <Button size="md" color="light" href="/login">Login</Button>
       <Button size="md" color="dark" href="/register">Daftar</Button>
-      <Button size="md" color="dark" on:click={logOut}>Logout</Button>
     </div>
-  <!-- {/if} -->
+  {/if}
   <NavUl>
     <NavLi href="/questionnaire">Kuesioner</NavLi>
     <NavLi href="/exam">Ujian</NavLi>

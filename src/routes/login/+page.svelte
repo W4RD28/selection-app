@@ -21,7 +21,7 @@
       }
     } finally {
       loading = false
-      throw redirect(303, '/dashboard')
+      window.location.href = '/dashboard'
     }
   }
 </script>

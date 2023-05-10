@@ -16,23 +16,28 @@
   let kota: string
   let kecamatan: string
   let kelurahan: string
+  let course: string
 
   const confirmPassword = () => {
 
     if (password === null || confirm_password === null) return false
     if (password !== confirm_password) return false
   }
-  const getUserId = async () => {
-        const { data: {user} } = await supabase.auth.getUser()
-        return user?.id
+  const getUserId = async (): Promise<string> => {
+    const { data: {user} } = await supabase.auth.getUser()
+    if (user === undefined) {
+      throw new Error()
+    }
+    return user_id = user?.id
   }
 
   const handleRegister = async() => {
     try {
       loading = true
-      let { error } = await supabase.auth.signUp({ 
+      let { data: {user}, error } = await supabase.auth.signUp({ 
         email, 
         password,
+        phone: phone_number,
         options: {
           data: {
             first_name,
@@ -43,17 +48,17 @@
             kota,
             kecamatan,
             kelurahan,
-
+            course,
           }
         }
       })
       if (error) throw error
 
       const { data } = await supabase
-        .from('Users')
+        .from('users')
         .insert(
           { 
-            id: getUserId(),
+            id: user?.id,
             first_name,
             last_name,
             phone_number,
@@ -62,8 +67,10 @@
             kota,
             kecamatan,
             kelurahan,
+            course,
           }
         )
+        .select()
       if (error) throw error
     } catch (error) {
       if (error instanceof Error) {
@@ -84,6 +91,7 @@
     } else {
       alert('Upload complete')
     }
+    return data
   }
 
   const handlePdfUpload = async (event: any) => {
@@ -127,7 +135,7 @@
     </div>
     <div>
       <Label for="nik" class="mb-2">Nomor Induk Kependudukan</Label>
-      <Input type="text" id="nik" pattern="[0-9]{16}" bind:value={nik} required />
+      <Input type="text" id="nik" pattern="[0-9]{'{'}16}" bind:value={nik} required />
     </div>
     <div>
       <Label for="kota" class="mb-2">Kota/Kabupaten KTP</Label>
@@ -141,6 +149,14 @@
       <Label for="kelurahan" class="mb-2">Kelurahan/Desa</Label>
       <Input type="text" id="kelurahan" bind:value={kelurahan} required />
     </div>
+  </div>
+  <div class="mb-6"> 
+    <Label for="course" class="mb-2">Pilih Bootcamp</Label>
+    <select id="course" bind:value={course} required>
+      <option value="frontend">Frontend</option>
+      <option value="backend">Backend</option>
+      <option value="mobile">Mobile</option>
+    </select>
   </div>
   <div class="mb-6">
     <Label for="avatar" class="pb-2">Pas Foto</Label>
