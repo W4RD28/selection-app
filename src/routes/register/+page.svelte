@@ -2,6 +2,8 @@
   import { Heading, Input, Fileupload, Label, Helper, Button, Checkbox, A } from 'flowbite-svelte'
   import { supabase } from '$lib/supabaseClient';
   import { redirect } from '@sveltejs/kit';
+  import { createEventDispatcher } from 'svelte';
+  import { generateString } from '$lib/helper';
 
   let loading = false
   let email: string
@@ -11,33 +13,57 @@
   let first_name: string
   let last_name: string
   let phone_number: string
-  let birth_date: Date
+  let birth_date: string
   let nik: string
   let kota: string
   let kecamatan: string
   let kelurahan: string
   let course: string
 
+  let files: FileList
+  let uploading: boolean = false
+
+  let avatar_url: string
+  let avatar_uploading: boolean = false
+
+  let ktp_url: string
+  let ktp_uploading: boolean = false
+
+  let ijazah_url: string
+  let ijazah_file: File
+  let cv_url: string
+  let cv_file: File
+
+  // $: isoDate = birth_date?.toISOString()
+
+  const dispatch = createEventDispatcher()
+
+  const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
+
   const confirmPassword = () => {
 
     if (password === null || confirm_password === null) return false
     if (password !== confirm_password) return false
-  }
-  const getUserId = async (): Promise<string> => {
-    const { data: {user} } = await supabase.auth.getUser()
-    if (user === undefined) {
-      throw new Error()
-    }
-    return user_id = user?.id
+
+    return true
   }
 
   const handleRegister = async() => {
     try {
       loading = true
+
+      // if (!confirmPassword()) {
+      //   alert("Password tidak sama")
+      //   throw new Error("Password tidak sama")
+      // }
+      // avatar_url = await handleAvatarImageUpload(avatar_file)
+      // ktp_url = await handleKtpImageUpload(ktp_file)
+      // ijazah_url = await handleIjazahUpload(ijazah_file)
+      // cv_url = await handleCvUpload(cv_file)
+
       let { data: {user}, error } = await supabase.auth.signUp({ 
         email, 
         password,
-        phone: phone_number,
         options: {
           data: {
             first_name,
@@ -49,58 +75,136 @@
             kecamatan,
             kelurahan,
             course,
+            avatar_url,
+            ktp_url,
+            ijazah_url,
+            cv_url
           }
         }
       })
-      if (error) throw error
+      console.log(user)
 
-      const { data } = await supabase
-        .from('users')
-        .insert(
-          { 
-            id: user?.id,
-            first_name,
-            last_name,
-            phone_number,
-            birth_date,
-            nik,
-            kota,
-            kecamatan,
-            kelurahan,
-            course,
-          }
-        )
-        .select()
       if (error) throw error
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message)
       }
-    } finally {
-      alert("Registrasi berhasil, silahkan cek email anda untuk verifikasi akun")
-      loading = false
-      window.location.href = "/"
+    } 
+
+    alert("Registrasi berhasil, silahkan cek email anda untuk verifikasi akun")
+    loading = false
+    window.location.href = "/"
+  }
+
+  const handleAvatarImageUpload = async () => {
+    try {
+      uploading = true
+
+      const fileExt = files[0].name.split('.').pop();
+
+      const url = `${generateString()}.${fileExt}`
+
+      const { data, error } = await supabase.storage.from('avatar').upload(`public/${url}`, files[0])
+      if (error) {
+        alert(error.message)
+      } else {
+        alert('Upload complete')
+      }
+
+      dispatch('upload')
+      avatar_url = data?.path
+    }
+    catch (error){
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+    finally {
+      uploading = false
     }
   }
 
-  const handleFileImageUpload = async (event: any) => {
-    const file = event.target.files[0]
-    const { data, error } = await supabase.storage.from('image').upload(`public/${file.name}`, file)
-    if (error) {
-      alert(error.message)
-    } else {
-      alert('Upload complete')
+  const handleKtpImageUpload = async () => {
+    try{ 
+      uploading = true
+
+      const fileExt = files[0].name.split('.').pop();
+
+      const url = `${generateString()}.${fileExt}`
+
+      const { data, error } = await supabase.storage.from('ktp').upload(`public/${url}`, files[0])
+      if (error) {
+        alert(error.message)
+      } else {
+        alert('Upload complete')
+      }
+
+      dispatch('upload')
+      ktp_url = data?.path
     }
-    return data
+    catch (error){
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+    finally {
+      uploading = false
+    }
   }
 
-  const handlePdfUpload = async (event: any) => {
-    const file = event.target.files[0]
-    const { data, error } = await supabase.storage.from('pdf').upload(`public/${file.name}`, file)
-    if (error) {
-      alert(error.message)
-    } else {
-      alert('Upload complete')
+  const handleCvUpload = async () => {
+    try{ 
+      uploading = true
+
+      const fileExt = files[0].name.split('.').pop();
+
+      const url = `${generateString()}.${fileExt}`
+
+      const { data, error } = await supabase.storage.from('cv').upload(`public/${url}`, files[0])
+      if (error) {
+        alert(error.message)
+      } else {
+        alert('Upload complete')
+      }
+
+      dispatch('upload')
+      cv_url = data?.path
+    }
+    catch (error){
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+    finally {
+      uploading = false
+    }
+  }
+
+  const handleIjazahUpload = async () => {
+    try{ 
+      uploading = true
+
+      const fileExt = files[0].name.split('.').pop();
+
+      const url = `${generateString()}.${fileExt}`
+
+      const { data, error } = await supabase.storage.from('ijazah').upload(`public/${url}`, files[0])
+      if (error) {
+        alert(error.message)
+      } else {
+        alert('Upload complete')
+      }
+
+      dispatch('upload')
+      ijazah_url = data?.path
+    }
+    catch (error){
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+    finally {
+      uploading = false
     }
   }
 </script>
@@ -126,12 +230,12 @@
       <Input type="email" id="email" bind:value={email} required />
     </div>
     <div>
-      <Label for="phone" class="mb-2">Nomor Telepon</Label>
-      <Input type="tel" id="phone" pattern="[0-9]{'{'}8,15}" bind:value={phone_number} required />
+      <Label for="phone_number" class="mb-2">Nomor Telepon</Label>
+      <Input type="tel" id="phone_number" pattern="[0-9]{'{'}8,15}" bind:value={phone_number} required />
     </div>
     <div>
       <Label for="birth_date" class="mb-2">Tanggal Lahir</Label>
-      <Input type="date" id="birth_date" bind:date={birth_date} required />
+      <Input type="date" id="birth_date" bind:value={birth_date} required />
     </div>
     <div>
       <Label for="nik" class="mb-2">Nomor Induk Kependudukan</Label>
@@ -159,32 +263,40 @@
     </select>
   </div>
   <div class="mb-6">
-    <Label for="avatar" class="pb-2">Pas Foto</Label>
-    <Fileupload id="avatar" class="mb-2" />
-    <Helper>SVG, PNG, JPG atau GIF.</Helper>
+    <Label  class="pb-2">Pas Foto (SVG, PNG, JPG atau GIF)</Label>
+    <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
+      <Fileupload class="mb-2" bind:files disabled={uploading}/>
+      <Button color="light" class="w-1/4 h-4/5" disabled={uploading} on:click={handleAvatarImageUpload}>Upload</Button>
+    </div>
   </div>
   <div class="mb-6">
-    <Label for="ktp" class="pb-2">Kartu Tanda Penduduk</Label>
-    <Fileupload id="ktp" class="mb-2" />
-    <Helper>SVG, PNG, JPG atau GIF.</Helper>
+    <Label for="ktp" class="pb-2">Kartu Tanda Penduduk (SVG, PNG, JPG atau GIF)</Label>
+    <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
+      <Fileupload id="ktp" class="mb-2" bind:files disable={uploading}/>
+      <Button color="light" class="w-1/4 h-4/5" disabled={uploading} on:click={handleKtpImageUpload}>Upload</Button>
+    </div>
   </div>
   <div class="mb-6">
-    <Label for="ijazah" class="pb-2">Ijazah SMA/SMK/Diploma/Sarjana atau sederajat</Label>
-    <Fileupload id="ijazah" class="mb-2" />
-    <Helper>File harus berformat PDF.</Helper>
+    <Label for="ijazah" class="pb-2">Ijazah SMA/SMK/Diploma/Sarjana atau sederajat (PDF)</Label>
+    <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
+    <Fileupload id="ijazah" class="mb-2" bind:files disable={uploading}/>
+    <Button color="light" class="w-1/4 h-4/5" disabled={uploading} on:click={handleIjazahUpload}>Upload</Button>
+  </div>
   </div>
   <div class="mb-6">
-    <Label for="cv" class="pb-2">CV</Label>
-    <Fileupload id="cv" class="mb-2" />
-    <Helper>File harus berformat PDF.</Helper>
+    <Label for="cv" class="pb-2">CV (PDF)</Label>
+    <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
+    <Fileupload id="cv" class="mb-2" bind:files disable={uploading}/>
+    <Button color="light" class="w-1/4 h-4/5" disabled={uploading} on:click={handleCvUpload}>Upload</Button>
+    </div>
   </div>
   <div class="mb-6" >
     <Label for="password" class="mb-2">Password</Label>
-    <Input type="password" id="password" bind:value={password} required />
+    <Input class="w-1/2" type="password" id="password" bind:value={password} required />
   </div>
   <div class="mb-6">
     <Label for="confirm_password" class="mb-2">Konfirmasi Password</Label>
-    <Input type="password" id="confirm_password" bind:value={confirm_password} required />
+    <Input class="w-1/2" type="password" id="confirm_password" bind:value={confirm_password} required />
   </div>
   <Checkbox class="mb-6 space-x-1" required>Semua data yang saya isikan dan tercantum dalam biodata ini adalah benar dan dapat dipertanggungjawabkan secara hukum.
     </Checkbox>
