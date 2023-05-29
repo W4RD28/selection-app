@@ -117,6 +117,7 @@
     {/await}
   </div>
   <div class="mb-6">
-    <Button type="submit" color="light" on:click={updateProfile}>Simpan</Button>
+    <Button type="submit" color="primary" on:click={updateProfile}>Simpan</Button>
+    <Button type="return" color="light" href="/">Kembali</Button> 
   </div>
 </form>

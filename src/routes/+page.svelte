@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-  <title>GoodCode Home</title>
+  <title>Dashboard</title>
   <meta name="description" content="SvelteKit using supabase-js v2" />
 </svelte:head>
 

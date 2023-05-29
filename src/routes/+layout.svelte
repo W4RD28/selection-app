@@ -51,7 +51,7 @@
     {#await getUserImageUrl(data.user?.avatar_url) }
       <Avatar size="md" />
     {:then avatar_url}
-      <Avatar alt="user image" src={avatar_url} id="user-drop" size="md" />
+      <Avatar alt="user image" class="hover:cursor-pointer" src={avatar_url} id="user-drop" size="md" />
       <Dropdown triggeredBy="#user-drop">
         <DropdownItem href="/profile">Profil</DropdownItem>
         <DropdownItem href="/logout" on:click={logOut}>Logout</DropdownItem>
@@ -59,8 +59,8 @@
     {/await}
   {:else}
     <div class="flex md:order-2 space-x-2.5">
-      <Button size="md" color="light" href="/login">Login</Button>
-      <Button size="md" color="dark" href="/register">Daftar</Button>
+      <Button size="md" color="alternative" href="/login">Login</Button>
+      <Button size="md" color="primary" href="/register">Daftar</Button>
     </div>
   {/if}
 </Navbar>
