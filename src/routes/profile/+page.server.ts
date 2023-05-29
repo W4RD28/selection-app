@@ -7,12 +7,6 @@ export async function load() {
   if (data == null) {
     throw redirect(302, "/login")
   }
-
-  let user_profile = await getProfile()
-  if (user_profile == null) {
-    // create user profile from metadata
-    await createProfile()
-  }
 }
 
 async function getUserId() {

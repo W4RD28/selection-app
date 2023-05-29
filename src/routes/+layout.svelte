@@ -6,7 +6,8 @@
   import "./styles.css";
   import logo from "../logo.svg"
   import type { LayoutData } from "./$types"
-  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Img, Footer, FooterCopyright, FooterIcon } from 'flowbite-svelte'
+  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Img, Avatar, Footer, FooterCopyright, FooterIcon, Dropdown, DropdownItem } from 'flowbite-svelte'
+  import { getUserImageUrl } from "$lib/helper";
 
   export let data : LayoutData
 
@@ -16,14 +17,10 @@
     if (data != null) return data.user;
   }
   let user = getUser()
-
+  
   const logOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) console.log("error", error);
-    
-    // let user = getUser()
-    // console.log(user)
-
     window.location.href = "/login";
   }
 
@@ -41,27 +38,31 @@
   });
 </script>
 
-<Navbar rounded color="form">
+<Navbar rounded color="primary">
   <NavBrand href="/" class="text-2xl"><Img alt="GoodCode logo" src={logo} size="max-w-xs"/></NavBrand>
   <NavHamburger />
-
-  {#if (data.session)}
-    <div class="flex md:order-2 space-x-2.5">
-      <Button size="md" color="light" href="/profile">Profil</Button>
-      <Button size="md" color="dark" on:click={logOut}>Logout</Button>
-    </div>
-  {:else}
-    <div class="flex md:order-2 space-x-2.5">
-      <Button size="md" color="light" href="/login">Login</Button>
-      <Button size="md" color="dark" href="/register">Daftar</Button>
-    </div>
-  {/if}
   <NavUl>
     <NavLi href="/questionnaire">Kuesioner</NavLi>
     <NavLi href="/exam">Ujian</NavLi>
     <NavLi href="/interview">Wawancara</NavLi>
     <NavLi href="/about">Tentang</NavLi>
   </NavUl>
+  {#if (data.session)}
+    {#await getUserImageUrl(data.user?.avatar_url) }
+      <Avatar size="md" />
+    {:then avatar_url}
+      <Avatar alt="user image" src={avatar_url} id="user-drop" size="md" />
+      <Dropdown triggeredBy="#user-drop">
+        <DropdownItem href="/profile">Profil</DropdownItem>
+        <DropdownItem href="/logout" on:click={logOut}>Logout</DropdownItem>
+      </Dropdown>
+    {/await}
+  {:else}
+    <div class="flex md:order-2 space-x-2.5">
+      <Button size="md" color="light" href="/login">Login</Button>
+      <Button size="md" color="dark" href="/register">Daftar</Button>
+    </div>
+  {/if}
 </Navbar>
 
 <div class="container" style="padding: 30px 50px 100px 100px">

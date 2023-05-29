@@ -78,7 +78,8 @@
             avatar_url,
             ktp_url,
             ijazah_url,
-            cv_url
+            cv_url,
+            role: 'user'
           }
         }
       })

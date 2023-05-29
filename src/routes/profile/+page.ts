@@ -8,12 +8,15 @@ export const load: PageLoad = async (event) => {
   if (!session) {
     throw redirect(302, '/login')
   }
-  // const { data: tableData } = await supabaseClient.from('test').select('*')
+  const { data: userData } = await supabaseClient.from('users')
+    .select('*')
+    .eq('id', session.user.id)
+    .single()
 
-  // return {
-  //   user: session.user,
-  //   tableData,
-  // }
+  return {
+    user: session.user,
+    userData,
+  }
 }
 
 export const _actions: Actions = {
