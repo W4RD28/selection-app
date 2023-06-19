@@ -1,6 +1,4 @@
 <script>
-  import { page } from '$app/stores'
-  import { Card, Heading } from 'flowbite-svelte';
 </script>
 
 <svelte:head>

@@ -2,7 +2,7 @@
 import { invalidate } from '$app/navigation';
 import { supabase } from '$lib/supabaseClient';
 import type { Session } from '@supabase/supabase-js';
-import type { LayoutLoad } from './$types';
+import type { LayoutLoad, Actions } from './$types';
 
 export const load: LayoutLoad = async ({ fetch, data, depends }) => {
   depends('supabase:auth');

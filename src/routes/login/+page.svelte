@@ -52,6 +52,6 @@
       </div>
     </form>
   </Card>
-  <Img src="https://images.unsplash.com/photo-1612837017391-5e9b1b0d0b0b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y29tcHV0ZXIlMjBjb3Vyc2V8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80" alt="course" class="w-full h-32 object-cover rounded-t-lg"/>
+  <Img src="low-code-development-concept-illustration_114360-7294.avif" alt="course" class="w-full h-32 object-cover rounded-t-lg"/>
 </div>
 

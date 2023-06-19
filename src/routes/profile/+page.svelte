@@ -3,10 +3,15 @@
   import { supabase } from '$lib/supabaseClient';
   import type { PageData } from './$types';
   import { getUserImageUrl, getUserKtp, getUserIjazah, getUserCv, generateString } from '$lib/helper';
+  import { createEventDispatcher } from 'svelte';
 
   export let data: PageData
   $: ({ session, user, userData } = data)
   let loading = false
+  let files: FileList
+  let uploading = false
+
+  const dispatch = createEventDispatcher()
 
   const updateProfile = async () => {
     await supabase
@@ -24,6 +29,118 @@
       )
       .eq('id', session?.user.id)
       .select()
+  }
+
+  const handleAvatarImageUpload = async () => {
+    try {
+      uploading = true
+
+      const fileExt = files[0].name.split('.').pop();
+
+      const url = `${generateString()}.${fileExt}`
+
+      const { data, error } = await supabase.storage.from('avatar').upload(`public/${url}`, files[0])
+      if (error) {
+        alert(error.message)
+      } else {
+        alert('Upload complete')
+      }
+
+      dispatch('upload')
+      avatar_url = data?.path
+    }
+    catch (error){
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+    finally {
+      uploading = false
+    }
+  }
+
+  const handleKtpImageUpload = async () => {
+    try{ 
+      uploading = true
+
+      const fileExt = files[0].name.split('.').pop();
+
+      const url = `${generateString()}.${fileExt}`
+
+      const { data, error } = await supabase.storage.from('ktp').upload(`public/${url}`, files[0])
+      if (error) {
+        alert(error.message)
+      } else {
+        alert('Upload complete')
+      }
+
+      dispatch('upload')
+      ktp_url = data?.path
+    }
+    catch (error){
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+    finally {
+      uploading = false
+    }
+  }
+
+  const handleCvUpload = async () => {
+    try{ 
+      uploading = true
+
+      const fileExt = files[0].name.split('.').pop();
+
+      const url = `${generateString()}.${fileExt}`
+
+      const { data, error } = await supabase.storage.from('cv').upload(`public/${url}`, files[0])
+      if (error) {
+        alert(error.message)
+      } else {
+        alert('Upload complete')
+      }
+
+      dispatch('upload')
+      cv_url = data?.path
+    }
+    catch (error){
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+    finally {
+      uploading = false
+    }
+  }
+
+  const handleIjazahUpload = async () => {
+    try{ 
+      uploading = true
+
+      const fileExt = files[0].name.split('.').pop();
+
+      const url = `${generateString()}.${fileExt}`
+
+      const { data, error } = await supabase.storage.from('ijazah').upload(`public/${url}`, files[0])
+      if (error) {
+        alert(error.message)
+      } else {
+        alert('Upload complete')
+      }
+
+      dispatch('upload')
+      ijazah_url = data?.path
+    }
+    catch (error){
+      if (error instanceof Error) {
+        alert(error.message)
+      }
+    }
+    finally {
+      uploading = false
+    }
   }
 
 </script>
@@ -93,8 +210,11 @@
     {#await getUserKtp(userData.ktp_url)}
       <Fileupload id="ktp" class="mb-2" />
     {:then ktpUrl} 
-      <Fileupload id="ktp" class="mb-2" src={ktpUrl} />
-      <Button type="button" color="light" on:click={() => window.open(ktpUrl)}>Lihat</Button>
+      <Button class="mb-3 w-32" type="button" color="light" on:click={() => window.open(ktpUrl)}>Lihat</Button>
+      <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
+        <Fileupload id="ktp" class="mb-2" bind:files disable={uploading}/>
+        <Button color="dark" class="w-1/4 h-4/5" disabled={uploading} on:click={handleKtpImageUpload}>Upload</Button>
+      </div>
     {/await}
     <Helper>SVG, PNG, JPG atau GIF.</Helper>
   </div>
@@ -103,8 +223,11 @@
     {#await getUserCv(userData.cv_url)}
       <Fileupload id="cv" class="mb-2" />
     {:then cvUrl} 
-      <Fileupload id="cv" class="mb-2" src={cvUrl} />
-      <Button type="button" color="light" on:click={() => window.open(cvUrl)}>Lihat</Button>
+      <Button class="mb-3 w-32" type="button" color="light" on:click={() => window.open(cvUrl)}>Lihat</Button>
+      <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
+        <Fileupload id="cv" class="mb-2" bind:files disable={uploading}/>
+        <Button color="dark" class="w-1/4 h-4/5" disabled={uploading} on:click={handleCvUpload}>Upload</Button>
+      </div>
     {/await}
   </div>
   <div class="mb-6">
@@ -112,8 +235,11 @@
     {#await getUserIjazah(userData.ijazah_url)}
       <Fileupload id="ijazah" class="mb-2" />
     {:then ijazahUrl}
-    <Fileupload id="ijazah" class="mb-2" src={ijazahUrl} />
-    <Button type="button" color="light" on:click={() => window.open(ijazahUrl)}>Lihat</Button>
+    <Button class="mb-3 w-32" type="button" color="light" on:click={() => window.open(ijazahUrl)}>Lihat</Button>
+    <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
+      <Fileupload id="ijazah" class="mb-2" bind:files disable={uploading}/>
+      <Button color="dark" class="w-1/4 h-4/5" disabled={uploading} on:click={handleIjazahUpload}>Upload</Button>
+    </div>
     {/await}
   </div>
   <div class="mb-6">

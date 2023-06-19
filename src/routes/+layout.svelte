@@ -4,19 +4,12 @@
   import { invalidate } from "$app/navigation";
   import { onMount } from "svelte";
   import "./styles.css";
-  import logo from "../logo.svg"
+  import logo from "../logo1.svg"
   import type { LayoutData } from "./$types"
   import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Img, Avatar, Footer, FooterCopyright, FooterIcon, Dropdown, DropdownItem } from 'flowbite-svelte'
   import { getUserImageUrl } from "$lib/helper";
 
   export let data : LayoutData
-
-  const getUser = async () => {
-    let { data, error } = await supabase.auth.getUser();
-    if (error) console.log("error", error);
-    if (data != null) return data.user;
-  }
-  let user = getUser()
   
   const logOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -29,7 +22,6 @@
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       invalidate('supabase:auth')
-      console.log(event, session, user)
     });
 
     return () => {
@@ -39,11 +31,11 @@
 </script>
 
 <Navbar rounded color="primary">
-  <NavBrand href="/" class="text-2xl"><Img alt="GoodCode logo" src={logo} size="max-w-xs"/></NavBrand>
+  <NavBrand href="/" class="text-4xl font-sans"><Img alt="Digmar logo" src={logo} size="max-w-xs"/>Digmar</NavBrand>
   <NavHamburger />
   <NavUl>
-    <NavLi href="/questionnaire">Kuesioner</NavLi>
-    <NavLi href="/exam">Ujian</NavLi>
+    <NavLi href="/questionnaire">Administrasi</NavLi>
+    <NavLi href="/exam">Tes Tertulis</NavLi> 
     <NavLi href="/interview">Wawancara</NavLi>
     <NavLi href="/about">Tentang</NavLi>
   </NavUl>
@@ -51,10 +43,10 @@
     {#await getUserImageUrl(data.user?.avatar_url) }
       <Avatar size="md" />
     {:then avatar_url}
-      <Avatar alt="user image" class="hover:cursor-pointer" src={avatar_url} id="user-drop" size="md" />
+      <Avatar alt="user image" class="hover:cursor-pointer ml-32" src={avatar_url} id="user-drop" size="md" />
       <Dropdown triggeredBy="#user-drop">
         <DropdownItem href="/profile">Profil</DropdownItem>
-        <DropdownItem href="/logout" on:click={logOut}>Logout</DropdownItem>
+        <DropdownItem on:click={logOut}>Logout</DropdownItem>
       </Dropdown>
     {/await}
   {:else}

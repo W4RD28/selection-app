@@ -55,11 +55,11 @@
 
 
 <svelte:head>
-  <title>Kuesioner</title>
+  <title>Tes Administrasi</title>
 </svelte:head>
 
 <form>
-  <Heading tag="h3" class="mb-6" >Kuesioner Bootcamp</Heading>
+  <Heading tag="h3" class="mb-6" >Pertanyaan Administrasi Bootcamp</Heading>
   <Label class="mb-6" for="category">Apakah Anda termasuk dalam kategori berikut?</Label>
   <div class="mb-6">
     <Radio class="mb-3" name="category" value="Yatim" bind:group={category} required>Yatim</Radio>
@@ -93,7 +93,7 @@
   </div>
   <Checkbox class="mb-6 space-x-1" required>Saya dapat mengikuti seluruh kegiatan bootcamp.
     </Checkbox>
-  <Checkbox class="mb-6 space-x-1" required>Saya telah menjawab kuesioner ini dengan jujur.
+  <Checkbox class="mb-6 space-x-1" required>Saya telah menjawab Tes Administrasi ini dengan jujur.
     </Checkbox>
   <Button type="submit" color="dark" on:click={handleSubmit}>Submit</Button>
 </form>
