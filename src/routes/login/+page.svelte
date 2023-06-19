@@ -21,7 +21,7 @@
       }
     } finally {
       loading = false
-      window.location.href = '/dashboard'
+      window.location.href = '/'
     }
   }
 </script>
