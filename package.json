@@ -13,6 +13,7 @@
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/kit": "^1.5.0",
     "autoprefixer": "^10.4.7",
+    "encoding": "^0.1.13",
     "postcss": "^8.4.14",
     "postcss-load-config": "^4.0.1",
     "svelte": "^3.54.0",
@@ -28,6 +29,7 @@
     "@popperjs/core": "^2.11.6",
     "@supabase/auth-helpers-sveltekit": "^0.8.7",
     "@supabase/supabase-js": "^2.7.1",
+    "@sveltejs/adapter-vercel": "^3.0.1",
     "classnames": "^2.3.2",
     "flowbite": "^1.6.3",
     "flowbite-svelte": "^0.30.6"
