@@ -1,9 +1,0 @@
-import * as universal from '../entries/pages/exam/questions/_slug_/_page.ts.js';
-
-export const index = 12;
-export const component = async () => (await import('../entries/pages/exam/questions/_slug_/_page.svelte.js')).default;
-export const file = '_app/immutable/components/pages/exam/questions/_slug_/_page.svelte-773a0f48.js';
-export { universal };
-export const imports = ["_app/immutable/components/pages/exam/questions/_slug_/_page.svelte-773a0f48.js","_app/immutable/chunks/index-7bccd38b.js","_app/immutable/chunks/Indicator.svelte_svelte_type_style_lang-3c3a1caf.js","_app/immutable/chunks/Button-fe9a1661.js","_app/immutable/chunks/Card-583a02c9.js","_app/immutable/chunks/Frame-c112f8c2.js","_app/immutable/chunks/Radio-89bc6605.js","_app/immutable/chunks/Label-d33db04b.js","_app/immutable/chunks/Img-800e2a0c.js","_app/immutable/chunks/P-6119d5a1.js","_app/immutable/chunks/helper-e5c3da30.js","_app/immutable/chunks/supabaseClient-8c0673ba.js","_app/immutable/chunks/index-aef88a00.js","_app/immutable/chunks/browser-ponyfill-10e9505f.js","_app/immutable/chunks/index-1a234430.js","_app/immutable/chunks/control-e7f5239e.js","_app/immutable/chunks/navigation-4b8a50a2.js","_app/immutable/chunks/singletons-1f85790e.js","_app/immutable/modules/pages/exam/questions/_slug_/_page.ts-b1791413.js","_app/immutable/chunks/getSupabase-c3da5325.js","_app/immutable/chunks/index-aef88a00.js","_app/immutable/chunks/browser-ponyfill-10e9505f.js","_app/immutable/chunks/index-1a234430.js","_app/immutable/chunks/control-e7f5239e.js","_app/immutable/chunks/index-7bccd38b.js","_app/immutable/chunks/Indicator.svelte_svelte_type_style_lang-3c3a1caf.js","_app/immutable/chunks/_page-fd2d69f3.js"];
-export const stylesheets = ["_app/immutable/assets/Indicator-1d121e74.css","_app/immutable/assets/Indicator-1d121e74.css"];
-export const fonts = [];

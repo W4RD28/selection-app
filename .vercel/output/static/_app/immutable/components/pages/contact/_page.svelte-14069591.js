@@ -1,1 +1,0 @@
-import{S as a,i as o,s as n,a8 as c,h as d,C as e}from"../../../chunks/index-7bccd38b.js";function h(s){return{c(){this.h()},l(t){c("svelte-v6giu5",document.head).forEach(d),this.h()},h(){document.title="Kontak"},m:e,p:e,i:e,o:e,d:e}}class l extends a{constructor(t){super(),o(this,t,null,h,n,{})}}export{l as default};
