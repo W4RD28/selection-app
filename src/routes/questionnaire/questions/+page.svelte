@@ -20,6 +20,7 @@
   let alasan: string
   let harapan: string
   let akses_laptop: string
+  let dapat_mengikuti: boolean
 
   const handleSubmit = async () => {
     try {
@@ -34,22 +35,24 @@
         harapan,
         akses_laptop,
       }
-
-      console.log(data)
       const { error } = await supabase
         .from('questionnaire')
         .insert(data)
         .select()
-      
-      console.log(data, error)
+
+      await supabase
+        .from('test_results')
+        .insert({
+          user_id,
+          administration_result: "selesai"
+        })
     }
     catch (error) {
       alert("Jawaban Anda belum sesuai")
-    }
-    finally {
       loading = false
-      window.location.href = "/questionnaire/thanks"
     }
+    loading = false
+    window.location.href = "/questionnaire/thanks"
   }
 </script>
 
@@ -91,7 +94,7 @@
     <Radio class="mb-3" name="akses_laptop" id="akses_laptop" value="ya" bind:group={akses_laptop} required>Ya</Radio>
     <Radio class="mb-3" name="akses_laptop" id="akses_laptop" value="tidak" bind:group={akses_laptop} required>Tidak</Radio>
   </div>
-  <Checkbox class="mb-6 space-x-1" required>Saya dapat mengikuti seluruh kegiatan bootcamp.
+  <Checkbox class="mb-6 space-x-1" required bind:checked={dapat_mengikuti}>Saya dapat mengikuti seluruh kegiatan bootcamp.
     </Checkbox>
   <Checkbox class="mb-6 space-x-1" required>Saya telah menjawab Tes Administrasi ini dengan jujur.
     </Checkbox>

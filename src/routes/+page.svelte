@@ -19,27 +19,17 @@
   <Heading tag="h2" class="text-4xl font-bold leading-tight text-gray-900">Pengumuman</Heading>
 </div>
 <div class="flex flex-col mt-6 md:flex-row md:items-center md:justify-between">
+  {#each announcementData as announcement}
   <div class="flex flex-col w-full md:w-1/3">
-    <A href="/announcements/1">
+    <A href="/announcements/{announcement.id}">
     <div class="flex flex-col items-center justify-center w-full h-30 p-10">
-      <Heading tag="h3" class="text-xl text-left font-bold">Pengumuman 1</Heading>
-      <Heading tag="h5" class="text-left" style="font-size: 12px">12/3/2023</Heading>
+      <Heading tag="h3" class="text-xl text-left font-bold">{announcement.title}</Heading>
+      <Heading tag="h5" class="text-left" style="font-size: 12px">{new Date(announcement.created_at).toLocaleDateString('id-ID')}</Heading>
     </div>
     </A> 
   </div>
-  <div class="flex flex-col w-full md:w-1/3">
-    <div class="flex flex-col items-center justify-center w-full h-30 p-10">
-      <Heading tag="h3" class="text-xl text-left font-bold">Pengumuman 2</Heading>
-      <Heading tag="h5" class="text-left" style="font-size: 12px">14/3/2023</Heading>
-    </div>
-  </div>
-  <div class="flex flex-col w-full md:w-1/3">
-    <div class="flex flex-col items-center justify-center w-full h-30 p-10">
-      <Heading tag="h3" class="text-xl text-left font-bold">Pengumuman 3</Heading>
-      <Heading tag="h5" class="text-left" style="font-size: 12px">15/3/2023</Heading>
-    </div>
-  </div>
-</div>
+  {/each}
+</div >
 <P class="mt-1 text-gray-600 text-left pl-10 mb-10">Lihat semua pengumuman <A href="/announcements">disini</A></P>
 
 {:else if !data.session}
@@ -100,26 +90,16 @@
   <Heading tag="h2" class="text-4xl font-bold leading-tight text-gray-900">Pengumuman</Heading>
 </div>
 <div class="flex flex-col mt-6 md:flex-row md:items-center md:justify-between">
+  {#each announcementData as announcement}
   <div class="flex flex-col w-full md:w-1/3">
-    <A href="/announcements/1">
+    <A href="/announcements/{announcement.id}">
     <div class="flex flex-col items-center justify-center w-full h-30 p-10">
-      <Heading tag="h3" class="text-xl text-left font-bold">Pengumuman 1</Heading>
-      <Heading tag="h5" class="text-left" style="font-size: 12px">12/3/2023</Heading>
+      <Heading tag="h3" class="text-xl text-left font-bold">{announcement.title}</Heading>
+      <Heading tag="h5" class="text-left" style="font-size: 12px">{new Date(announcement.created_at).toLocaleDateString('id-ID')}</Heading>
     </div>
     </A> 
   </div>
-  <div class="flex flex-col w-full md:w-1/3">
-    <div class="flex flex-col items-center justify-center w-full h-30 p-10">
-      <Heading tag="h3" class="text-xl text-left font-bold">Pengumuman 2</Heading>
-      <Heading tag="h5" class="text-left" style="font-size: 12px">14/3/2023</Heading>
-    </div>
-  </div>
-  <div class="flex flex-col w-full md:w-1/3">
-    <div class="flex flex-col items-center justify-center w-full h-30 p-10">
-      <Heading tag="h3" class="text-xl text-left font-bold">Pengumuman 3</Heading>
-      <Heading tag="h5" class="text-left" style="font-size: 12px">15/3/2023</Heading>
-    </div>
-  </div>
-</div>
+  {/each}
+</div >
 <P class="mt-1 text-gray-600 text-left pl-10 mb-10">Lihat semua pengumuman <A href="/announcements">disini</A></P>
 {/if}

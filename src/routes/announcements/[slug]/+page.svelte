@@ -6,12 +6,9 @@
   export let data: PageData
   $: ({user, session, announcementData, announcementDate} = data)
 
-  onMount(() => {
-    console.log(announcementData)
-  })
 </script>
 <svelte:head>
-  <title>Pengumuman</title>
+  <title>{announcementData.title}</title>
 </svelte:head>
 
 <div>

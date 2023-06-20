@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Heading, Input, Img, Avatar, Fileupload, Label, Helper, Button, Checkbox, A } from 'flowbite-svelte'
+  import { Heading, Input, P, Avatar, Fileupload, Label, Helper, Button, A } from 'flowbite-svelte'
   import { supabase } from '$lib/supabaseClient';
   import type { PageData } from './$types';
   import { getUserImageUrl, getUserKtp, getUserIjazah, getUserCv, generateString } from '$lib/helper';
@@ -169,7 +169,7 @@
     </div>
     <div>
       <Label for="email" class="mb-2">Alamat Email</Label>
-      <Input type="email" id="email" bind:value={user.email} required />
+      <Input type="email" id="email" disabled bind:value={user.email} required />
     </div>
     <div>
       <Label for="phone" class="mb-2">Nomor Telepon</Label>
@@ -241,6 +241,12 @@
       <Button color="dark" class="w-1/4 h-4/5" disabled={uploading} on:click={handleIjazahUpload}>Upload</Button>
     </div>
     {/await}
+  </div>
+  <div class="mb-6">
+    <A href="account/change-password"><P color="blue">Ganti Password</P></A>
+  </div>
+  <div class="mb-6">
+    <A href="account/change-email"><P color="blue">Ganti Email</P></A>
   </div>
   <div class="mb-6">
     <Button type="submit" color="primary" on:click={updateProfile}>Simpan</Button>

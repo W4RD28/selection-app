@@ -1,5 +1,26 @@
-<script>
+<script lang="ts">
   import { Button, Heading, P, List, Li } from "flowbite-svelte";
+  import { supabase } from "$lib/supabaseClient"
+  import type { PageData } from "./$types"
+  import { onMount } from "svelte";
+
+  export let data: PageData
+  $: ({session, testResult} = data)
+
+  onMount(() => console.log(testResult))
+
+  const handleWork = async () => {
+    if (!testResult || testResult.exam_done) return
+    const currentTimeStamp = Date.now();
+    const updatedTimeStamp = currentTimeStamp + 90 * 60 * 1000;
+    const updatedDate = new Date(updatedTimeStamp);
+    await supabase
+      .from("test_results")
+      .update({
+        exam_done_time: updatedDate
+      })
+      .eq("user_id", session?.user?.id)
+  }
 </script>
 
 <svelte:head>
@@ -8,7 +29,13 @@
 
 <div class="justify-center">
   <Heading tag="h2" class="mb-6">Halaman Tes Tertulis</Heading>
-  <P class="mb-6 text-red-700">Status: Anda belum melakukan tes ini</P>
+  {#if !testResult}
+  <P class="mb-6 text-red-700">Status: Anda belum melakukan tes administrasi</P>
+  {:else if testResult.exam_done == null}
+  <P class="mb-6 text-red-700">Status: Anda belum melakukan tes tertulis</P>
+  {:else}
+  <P class="mb-6">Status: Anda telah melakukan tes tertulis</P>
+  {/if}
   <div class="mb-6">
     <P class="mb-2">Tes memiliki ketentuan berikut:</P>
     <List tag="ul" class="space-y-1 text-black">
@@ -18,6 +45,11 @@
       <Li>Hasil tes digunakan untuk penentuan seleksi wawancara</Li>
     </List>
   </div>
-  <Button href="/exam/questions/1" class="mt-6 mb-6" color="light">Laksanakan Tes</Button>
+  {#if !testResult}
+  <Button href="/questionnaire" class="mt-6 mb-6" color="light">Laksanakan Tes Administrasi</Button>
+  {:else if testResult?.exam_done == null}
+  <Button href="/exam/questions/1" on:click={handleWork} class="mt-6 mb-6" color="light">Laksanakan Tes</Button>
+  {:else if testResult.exam_done != null}
   <Button href="/exam/result" class="mt-6 mb-6" color="light">Lihat Hasil Tes</Button>
+  {/if}
 </div>

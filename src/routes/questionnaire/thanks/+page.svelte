@@ -7,7 +7,7 @@
   <title>Penyelesaian kuesioner</title>
 </svelte:head>
 
-<P>
+<P class='mb-6'>
   Terima kasih telah mengisi kuesioner ini. Jawaban Anda akan kami jadikan pertimbangan dalam proses seleksi.
 </P>
 

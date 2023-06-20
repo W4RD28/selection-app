@@ -3,7 +3,6 @@
   import type { PageData } from './$types'
   import { getQuestionImage } from "$lib/helper";
   import { supabase } from "$lib/supabaseClient";
-  import { redirect } from "@sveltejs/kit";
   import { onMount } from 'svelte'
   import { invalidateAll } from "$app/navigation";
 
@@ -20,6 +19,17 @@
       clearInterval(interval)
     }
   })
+
+  const doneExam = async () => {
+    await supabase
+      .from('test_results')
+      .update(
+        {
+          exam_done: "selesai"
+        }
+      )
+      .eq("user_id", user?.id)
+  }
 
   const upsertUserAnswer = async () => {
     loading = true
@@ -121,6 +131,6 @@
         {/each}
       </div>
     </Card>
-    <Button size="lg" class="mt-6" color="primary">Selesai</Button>
+    <Button size="lg" class="mt-6" color="primary" on:click={doneExam} href="/exam/finish-exam">Selesai</Button>
   </div>
 </div>

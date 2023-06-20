@@ -1,19 +1,37 @@
+import { redirect } from '@sveltejs/kit'
 import type { PageLoad } from './$types'
 import { getSupabase } from '@supabase/auth-helpers-sveltekit'
-import { redirect, error } from '@sveltejs/kit'
-import { TimelineItemVertical } from 'flowbite-svelte'
 
 export const load: PageLoad = async (event) => {
   const { session, supabaseClient } = await getSupabase(event)
   if (!session) {
-    throw redirect(302, '/login')
+    redirect(302,'/login')
   }
 
-  let time = Date.now()
-  let timeLimit = new Date()
-  timeLimit.setHours(19, 0, 0, 0)
+  const { data: testResult } = await supabaseClient
+    .from('test_results')
+    .select('*')
+    .eq('user_id', session?.user.id)
+    .single()
 
-  let timeLeft = (timeLimit - time)/ 1000
+  const examDone = new Date(testResult.exam_done_time)
+  const currentTime = new Date()
+  if (testResult.administration_result == null){
+    redirect(302,'/administration')
+  }
+  if (testResult.exam_done != null || examDone < currentTime){
+    await supabaseClient
+      .from('test_results')
+      .update(
+        {
+          exam_done: 'selesai'
+        }
+      )
+      .eq('user_id', session?.user.id)
+    redirect(302,'/exam/finish-exam')
+  }
+
+  let timeLeft: any = (examDone - currentTime)/ 1000
   let hoursLeft: any = Math.floor(timeLeft / 3600)
   hoursLeft = hoursLeft < 10 ? '0' + hoursLeft : hoursLeft
   let minutesLeft: any = Math.floor((timeLeft % 3600) / 60)

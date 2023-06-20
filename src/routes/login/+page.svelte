@@ -1,6 +1,5 @@
 <script lang="ts">
   import { supabase } from '$lib/supabaseClient';
-  import { redirect } from '@sveltejs/kit';
   import { Input, Label, Button, Checkbox, A, Card, Heading, Img } from 'flowbite-svelte'
 
   let loading = false

@@ -3,15 +3,16 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 
 export const load: PageLoad = async (event) => {
   const { session, supabaseClient } = await getSupabase(event)
-
-  const { data: announcementData } = await supabaseClient
-    .from('announcement')
+  if (!session) {
+    window.location.href = '/login'
+  }
+  const { data: userData } = await supabaseClient.from('users')
     .select('*')
-    .order('created_at', { ascending: false })
+    .eq('id', session?.user.id)
+    .single()
 
   return {
-    session,
     user: session?.user,
-    announcementData,
+    userData,
   }
 }
