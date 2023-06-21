@@ -51,6 +51,5 @@
       </div>
     </form>
   </Card>
-  <Img src="low-code-development-concept-illustration_114360-7294.avif" alt="course" class="w-full h-32 object-cover rounded-t-lg"/>
 </div>
 
