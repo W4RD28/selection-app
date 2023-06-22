@@ -5,7 +5,7 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 export const load: PageLoad = async (event) => {
   const { session, supabaseClient } = await getSupabase(event)
   if (!session) {
-    redirect(302,'/login')
+    throw redirect(302,'/login')
   }
 
   const { data: testResult } = await supabaseClient
@@ -17,7 +17,7 @@ export const load: PageLoad = async (event) => {
   const examDone = new Date(testResult.exam_done_time)
   const currentTime = new Date()
   if (testResult.administration_result == null){
-    redirect(302,'/administration')
+    throw redirect(302,'/questionnaire')
   }
   if (testResult.exam_done != null || examDone < currentTime){
     await supabaseClient
@@ -28,7 +28,7 @@ export const load: PageLoad = async (event) => {
         }
       )
       .eq('user_id', session?.user.id)
-    redirect(302,'/exam/finish-exam')
+      throw redirect(302,'/exam/finish-exam')
   }
 
   let timeLeft: any = (examDone - currentTime)/ 1000

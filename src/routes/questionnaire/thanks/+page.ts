@@ -5,6 +5,6 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 export const load: PageLoad = async (event) => {
   const { session, supabaseClient } = await getSupabase(event)
   if (!session) {
-    redirect(302, '/login')
+    throw redirect(302, '/login')
   }
 }

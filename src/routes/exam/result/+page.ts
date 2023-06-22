@@ -5,15 +5,15 @@ import { getSupabase } from '@supabase/auth-helpers-sveltekit'
 export const load: PageLoad = async (event) => {
   const { session, supabaseClient } = await getSupabase(event)
   if (!session) {
-    redirect(302,'/login')
+    throw redirect(302,'/login')
   }
   const { data: testResults } = await supabaseClient.from('test_results')
     .select('*')
     .eq('user_id', session?.user.id)
     .single()
 
-  if (!testResults) redirect(302, '/exam')
-  if (!testResults.exam_done) redirect(302, '/exam')
+  if (!testResults) throw redirect(302, '/exam')
+  if (!testResults.exam_done) throw redirect(302, '/exam')
 
   const { data: examAnswer } = await supabaseClient
     .from('user_answers')

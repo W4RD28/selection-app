@@ -1,4 +1,3 @@
-// src/routes/profile/+page.ts
 import type { PageLoad } from './$types'
 import { fail, redirect } from '@sveltejs/kit'
 import { AuthApiError } from '@supabase/supabase-js'
