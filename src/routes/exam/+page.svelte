@@ -2,29 +2,27 @@
   import { Button, Heading, P, List, Li } from "flowbite-svelte";
   import { supabase } from "$lib/supabaseClient"
   import type { PageData } from "./$types"
-  import { onMount } from "svelte";
 
   export let data: PageData
   $: ({session, testResult} = data)
 
-  onMount(() => console.log(testResult))
-
   const handleWork = async () => {
-    if (!testResult || testResult.exam_done) return
-    const currentTimeStamp = Date.now();
-    const updatedTimeStamp = currentTimeStamp + 90 * 60 * 1000;
-    const updatedDate = new Date(updatedTimeStamp);
-    await supabase
-      .from("test_results")
-      .update({
-        exam_done_time: updatedDate
-      })
-      .eq("user_id", session?.user?.id)
+    if (!testResult.exam_done_time) {
+      const currentTimeStamp = Date.now();
+      const updatedTimeStamp = currentTimeStamp + 90 * 60 * 1000;
+      const updatedDate = new Date(updatedTimeStamp);
+      await supabase
+        .from("test_results")
+        .update({
+          exam_done_time: updatedDate
+        })
+        .eq("user_id", session?.user?.id)
+    }
   }
 </script>
 
 <svelte:head>
-  <title>Tes</title>
+  <title>Tes Tertulis</title>
 </svelte:head>
 
 <div class="justify-center">
@@ -47,9 +45,9 @@
   </div>
   {#if !testResult}
   <Button href="/questionnaire" class="mt-6 mb-6" color="light">Laksanakan Tes Administrasi</Button>
-  {:else if testResult?.exam_done == null}
+  {:else if testResult?.exam_done == null || testResult.exam_done == ""}
   <Button href="/exam/questions/1" on:click={handleWork} class="mt-6 mb-6" color="light">Laksanakan Tes</Button>
-  {:else if testResult.exam_done != null}
+  {:else if testResult.exam_done == "selesai"}
   <Button href="/exam/result" class="mt-6 mb-6" color="light">Lihat Hasil Tes</Button>
   {/if}
 </div>

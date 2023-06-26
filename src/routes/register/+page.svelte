@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { Heading, Input, Fileupload, Label, Helper, Button, Checkbox, A } from 'flowbite-svelte'
+  import { Heading, Input, Fileupload, Label, Button, Checkbox, A, Select } from 'flowbite-svelte'
   import { supabase } from '$lib/supabaseClient';
-  import { redirect } from '@sveltejs/kit';
   import { createEventDispatcher } from 'svelte';
   import { generateString } from '$lib/helper';
 
@@ -34,33 +33,31 @@
   let cv_url: string
   let cv_file: File
 
-  // $: isoDate = birth_date?.toISOString()
+  let bootcampCourses = [
+    {value: "karyawan", name:"Karyawan"},
+    {value: "pebisnis", name:"Pebisnis"},
+    {value: "profesional", name:"Profesional"}
+  ]
 
   const dispatch = createEventDispatcher()
 
   const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
 
-  const confirmPassword = () => {
+  const checkPasswordMatch = (password: string, confirm_password: string) => {
+    if (password == "" || confirm_password == "") return true
+    return password !== confirm_password
+  }
 
-    if (password === null || confirm_password === null) return false
-    if (password !== confirm_password) return false
-
-    return true
+  const handlePasswordInput = (event) => {
+    password = event.target.value
+  }
+  const handleConfirmPasswordInput = (event) => {
+    confirm_password = event.target.value
   }
 
   const handleRegister = async() => {
     try {
       loading = true
-
-      // if (!confirmPassword()) {
-      //   alert("Password tidak sama")
-      //   throw new Error("Password tidak sama")
-      // }
-      // avatar_url = await handleAvatarImageUpload(avatar_file)
-      // ktp_url = await handleKtpImageUpload(ktp_file)
-      // ijazah_url = await handleIjazahUpload(ijazah_file)
-      // cv_url = await handleCvUpload(cv_file)
-
       let { data: {user}, error } = await supabase.auth.signUp({ 
         email, 
         password,
@@ -89,6 +86,7 @@
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message)
+        return
       }
     } 
 
@@ -255,13 +253,10 @@
       <Input type="text" id="kelurahan" bind:value={kelurahan} required />
     </div>
   </div>
-  <div class="mb-6"> 
-    <Label for="course" class="mb-2">Pilih Bootcamp</Label>
-    <select id="course" bind:value={course} required>
-      <option value="frontend">Frontend</option>
-      <option value="backend">Backend</option>
-      <option value="mobile">Mobile</option>
-    </select>
+  <div class="mb-6 w-1/2"> 
+    <Label for="course" class="mb-2 w-full">Kursus Bootcamp (TIDAK BISA DIPILIH ULANG)
+      <Select bind:value={course} items={bootcampCourses}></Select>
+    </Label>
   </div>
   <div class="mb-6">
     <Label  class="pb-2">Pas Foto (SVG, PNG, JPG atau GIF)</Label>
@@ -293,15 +288,15 @@
   </div>
   <div class="mb-6" >
     <Label for="password" class="mb-2">Password</Label>
-    <Input class="w-1/2" type="password" id="password" bind:value={password} required />
+    <Input class="w-1/2" name="password" type="password" id="password" bind:value={password} on:input={handlePasswordInput} required />
   </div>
   <div class="mb-6">
     <Label for="confirm_password" class="mb-2">Konfirmasi Password</Label>
-    <Input class="w-1/2" type="password" id="confirm_password" bind:value={confirm_password} required />
+    <Input class="w-1/2" name="confirm_password" type="password" id="confirm_password" bind:value={confirm_password} on:input={handleConfirmPasswordInput} required />
   </div>
   <Checkbox class="mb-6 space-x-1" required>Semua data yang saya isikan dan tercantum dalam biodata ini adalah benar dan dapat dipertanggungjawabkan secara hukum.
     </Checkbox>
-  <Button type="submit" color="dark" on:click={handleRegister} >Register</Button>
+  <Button type="submit" color="dark" disabled={checkPasswordMatch(password, confirm_password)} on:click={handleRegister} >Register</Button>
   <div class="mb-6 pt-5">
     <A href="/login">Sudah miliki akun? </A>
   </div>

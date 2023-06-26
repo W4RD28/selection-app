@@ -1,11 +1,12 @@
 <script lang="ts">
   import { supabase } from '$lib/supabaseClient';
   import { Input, Label, Button, Checkbox, A, Card, Heading, Img } from 'flowbite-svelte'
+  import { derived, writable } from 'svelte/store';
 
   let loading = false
   let email: string
   let password: string
-
+  
   const handleLogin = async() => {
     try {
       loading = true

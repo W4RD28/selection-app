@@ -1,24 +1,45 @@
 <script lang="ts">
-  import { Radio, P, ButtonGroup, Button, Img, Dropdown, DropdownItem, Chevron, Card } from "flowbite-svelte"
+  import { Radio, P, ButtonGroup, Button, Img, Card, Timeline } from "flowbite-svelte"
   import type { PageData } from './$types'
   import { getQuestionImage } from "$lib/helper";
   import { supabase } from "$lib/supabaseClient";
-  import { onMount } from 'svelte'
+  import { afterUpdate, beforeUpdate, onDestroy, onMount } from 'svelte'
   import { invalidateAll } from "$app/navigation";
+  import { writable } from "svelte/store";
 
   export let data: PageData
-  $: ({ user, examData, questions, questionsCount, answer, userAnswer, timer } = data)
+  $: ({ user, examData, questions, questionsCount, answer, userAnswer, timer, examDoneTime } = data)
   let loading = false
-  let currentAnswer: string
+  let currentAnswer = writable(userAnswer)
+  const interval = 1000
 
-  onMount(() => {
-    const interval = setInterval(() => {
-      invalidateAll()
-    }, 1000)
-    return () => {
-      clearInterval(interval)
-    }
+  function updateTimer() {
+    const currentTime = new Date()
+    timer.timeLeft = (examDoneTime - currentTime)/ 1000
+    timer.hoursLeft = Math.floor(timer.timeLeft / 3600)
+    timer.hoursLeft = timer.hoursLeft < 10 ? '0' + timer.hoursLeft : timer.hoursLeft
+    timer.minutesLeft = Math.floor((timer.timeLeft % 3600) / 60)
+    timer.minutesLeft = timer.minutesLeft < 10 ? '0' + timer.minutesLeft : timer.minutesLeft
+    timer.secondsLeft = Math.floor((timer.timeLeft % 3600) % 60)
+    timer.secondsLeft = timer.secondsLeft < 10 ? '0' + timer.secondsLeft : timer.secondsLeft
+  }
+
+  const unsubscribeAnswer = currentAnswer.subscribe(async (data) => {
+      if (data !== null) {
+        upsertUserAnswer()
+      }
   })
+  async function delayedExecution() {
+    setInterval(updateTimer, 100)
+    if (timer.timeLeft <= 0) doneExam()
+  }
+  afterUpdate(async () => {
+    currentAnswer.set(userAnswer)
+  })
+  onMount(() => {
+    delayedExecution()
+  })
+  onDestroy(unsubscribeAnswer)
 
   const doneExam = async () => {
     await supabase
@@ -34,6 +55,11 @@
   const upsertUserAnswer = async () => {
     loading = true
 
+    if ($currentAnswer == null) {
+      loading = false
+      return
+    }
+
     if (answer == null) {
       const { data, error } = await supabase
         .from('user_answers')
@@ -41,7 +67,7 @@
           {
             user_id: user.id,
             question_id: examData.id,
-            answer: currentAnswer
+            answer: $currentAnswer
           }
         )
     }
@@ -50,7 +76,7 @@
       .from('user_answers')
       .update(
         {
-          answer: currentAnswer
+          answer: $currentAnswer
         },
       )
       .eq('user_id', user.id)
@@ -61,7 +87,7 @@
 </script>
 
 <svelte:head>
-  <title>Ujian</title>
+  <title>Ujian Tertulis</title>
 </svelte:head>
 
 
@@ -71,10 +97,10 @@
     <div>
       <h1 class="mb-6">Soal {examData.id}</h1>
       {#if examData.image}
-        <Img src={getQuestionImage(examData.image)} alt="Question Image" class="mb-6" />
+        <Img src={getQuestionImage(examData.image)} size="md" alt="Question Image" class="mb-6" />
       {/if}
       <P class="mb-6">{examData.question}</P>
-      {#if userAnswer == "a"}
+      <!-- {#if userAnswer == "a"}
         <Radio bind:group={currentAnswer} checked on:change={upsertUserAnswer} value="a" class="mb-6">
           {examData.option_a}
         </Radio>
@@ -109,7 +135,19 @@
         <Radio bind:group={currentAnswer} on:change={upsertUserAnswer} value="d" class="mb-6">
           {examData.option_d}
         </Radio>
-      {/if}
+      {/if} -->
+      <Radio bind:group={$currentAnswer} value="a" class="mb-6">
+        {examData.option_a}
+      </Radio>
+      <Radio bind:group={$currentAnswer} value="b" class="mb-6">
+        {examData.option_b}
+      </Radio>
+      <Radio bind:group={$currentAnswer} value="c" class="mb-6">
+        {examData.option_c}
+      </Radio>
+      <Radio bind:group={$currentAnswer} value="d" class="mb-6">
+        {examData.option_d}
+      </Radio>
       <ButtonGroup class="mt-3">
         <Button variant="outline" color="primary" href="/exam/questions/{examData.id - 1}" disabled={examData.id === 1}>
           Sebelumnya

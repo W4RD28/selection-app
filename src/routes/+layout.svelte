@@ -6,7 +6,7 @@
   import "./styles.css";
   import logo from "../logo1.svg"
   import type { LayoutData } from "./$types"
-  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Img, Avatar, Footer, FooterCopyright, FooterIcon, Dropdown, DropdownItem } from 'flowbite-svelte'
+  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Button, Img, Avatar, Footer, FooterCopyright, FooterIcon, Dropdown, DropdownItem, DropdownDivider } from 'flowbite-svelte'
   import { getUserImageUrl } from "$lib/helper";
 
   export let data : LayoutData
@@ -46,6 +46,7 @@
       <Avatar alt="user image" class="hover:cursor-pointer ml-32" src={avatar_url} id="user-drop" size="md" />
       <Dropdown triggeredBy="#user-drop">
         <DropdownItem href="/profile">Profil</DropdownItem>
+        <DropdownDivider />
         <DropdownItem on:click={logOut}>Logout</DropdownItem>
       </Dropdown>
     {/await}

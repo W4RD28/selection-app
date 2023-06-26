@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit'
 import type { PageLoad } from './$types'
 import { getSupabase } from '@supabase/auth-helpers-sveltekit'
+import { readable } from 'svelte/store'
 
 export const load: PageLoad = async (event) => {
   const { session, supabaseClient } = await getSupabase(event)
@@ -14,12 +15,12 @@ export const load: PageLoad = async (event) => {
     .eq('user_id', session?.user.id)
     .single()
 
-  const examDone = new Date(testResult.exam_done_time)
+  const examDoneTime = new Date(testResult.exam_done_time)
   const currentTime = new Date()
   if (testResult.administration_result == null){
     throw redirect(302,'/questionnaire')
   }
-  if (testResult.exam_done != null || examDone < currentTime){
+  if (testResult.exam_done != null){
     await supabaseClient
       .from('test_results')
       .update(
@@ -31,7 +32,7 @@ export const load: PageLoad = async (event) => {
       throw redirect(302,'/exam/finish-exam')
   }
 
-  let timeLeft: any = (examDone - currentTime)/ 1000
+  let timeLeft: any = (examDoneTime - currentTime)/ 1000
   let hoursLeft: any = Math.floor(timeLeft / 3600)
   hoursLeft = hoursLeft < 10 ? '0' + hoursLeft : hoursLeft
   let minutesLeft: any = Math.floor((timeLeft % 3600) / 60)
@@ -40,6 +41,7 @@ export const load: PageLoad = async (event) => {
   secondsLeft = secondsLeft < 10 ? '0' + secondsLeft : secondsLeft
 
   let timer = {
+    timeLeft,
     hoursLeft,
     minutesLeft,
     secondsLeft
@@ -66,6 +68,7 @@ export const load: PageLoad = async (event) => {
     questionsCount: count,
     answer,
     userAnswer: answer?.answer,
-    timer
+    timer,
+    examDoneTime
   }
 }

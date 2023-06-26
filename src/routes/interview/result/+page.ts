@@ -7,13 +7,14 @@ export const load: PageLoad = async (event) => {
   if (!session) {
     throw redirect(302, '/login')
   }
-  const { data: userData } = await supabaseClient.from('users')
-    .select('*')
-    .eq('id', session?.user.id)
+
+  const { data: testResult } = await supabaseClient.from('test_results')
+    .update({ interview_result: "lulus" })
+    .eq('user_id', session.user.id)
+    .select()
     .single()
 
   return {
-    user: session?.user,
-    userData,
+    testResult
   }
 }

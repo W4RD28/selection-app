@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Heading, Input, Textarea, Label, Button, Checkbox, A, Radio } from 'flowbite-svelte'
+  import { Heading, Textarea, Label, Button, Checkbox, Radio } from 'flowbite-svelte'
   import { supabase } from '$lib/supabaseClient';
-  import { error, redirect } from '@sveltejs/kit';
+  import { derived, writable } from 'svelte/store';
 
   const getUserId = async (): Promise<string> => {
     const { data: {user} } = await supabase.auth.getUser()
@@ -14,7 +14,7 @@
   let loading = false
   let user_id: string = getUserId()
   let category: string
-  let disability: string
+  let disability = writable('')
   let disability_type: string
   let pendapatan: string
   let alasan: string
@@ -22,13 +22,18 @@
   let akses_laptop: string
   let dapat_mengikuti: boolean
 
+  const checkIfDisabled = derived(disability, ($value1) => {
+    if ($value1 == "Ya") return true
+    return false
+  })
+
   const handleSubmit = async () => {
     try {
       loading = true
       let data = {
         user_id,
         category,
-        disability,
+        disability: $disability,
         disability_type,
         pendapatan,
         alasan,
@@ -52,7 +57,6 @@
       loading = false
     }
     loading = false
-    window.location.href = "/questionnaire/thanks"
   }
 </script>
 
@@ -71,11 +75,11 @@
   </div>
   <Label class="mb-6" for="disability">Apakah Anda termasuk penyandang disabilitas?</Label>
   <div class="mb-6">
-    <Radio class="mb-3" name="disability" value="Ya" bind:group={disability} required>Ya</Radio>
-    <Radio class="mb-3" name="disability" value="Tidak" bind:group={disability} required>Tidak</Radio>
+    <Radio class="mb-3" name="disability" value="Ya" bind:group={$disability} required>Ya</Radio>
+    <Radio class="mb-3" name="disability" value="Tidak" bind:group={$disability} required>Tidak</Radio>
   </div>
   <Label class="mb-6" for="disability_type">Jika ya, jenis disabilitas</Label>
-  <Textarea class="mb-6" id="disability_type" bind:value={disability_type}></Textarea>
+  <Textarea class="mb-6" id="disability_type" disabled={!$checkIfDisabled} bind:value={disability_type}></Textarea>
   <Label class="mb-6" for="pendapatan">Pendapatan per bulan</Label>
   <div class="mb-6">
     <Radio class="mb-3" name="pendapatan" value="Kurang dari 1 juta" bind:group={pendapatan} required>Kurang dari 1 juta</Radio>
@@ -98,5 +102,5 @@
     </Checkbox>
   <Checkbox class="mb-6 space-x-1" required>Saya telah menjawab Tes Administrasi ini dengan jujur.
     </Checkbox>
-  <Button type="submit" color="dark" on:click={handleSubmit}>Submit</Button>
+  <Button type="submit" color="dark" on:click={handleSubmit} href="/questionnaire/thanks">Submit</Button>
 </form>

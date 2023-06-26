@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Heading, Input, P, Avatar, Fileupload, Label, Helper, Button, A } from 'flowbite-svelte'
+  import { Heading, Input, P, Avatar, Fileupload, Label, Helper, Button, A, Select } from 'flowbite-svelte'
   import { supabase } from '$lib/supabaseClient';
   import type { PageData } from './$types';
   import { getUserImageUrl, getUserKtp, getUserIjazah, getUserCv, generateString } from '$lib/helper';
@@ -7,9 +7,13 @@
 
   export let data: PageData
   $: ({ session, user, userData } = data)
-  let loading = false
   let files: FileList
   let uploading = false
+  let bootcampCourses = [
+    {value: "karyawan", name:"Karyawan"},
+    {value: "pebisnis", name:"Pebisnis"},
+    {value: "profesional", name:"Profesional"}
+  ]
 
   const dispatch = createEventDispatcher()
 
@@ -29,6 +33,8 @@
       )
       .eq('id', session?.user.id)
       .select()
+
+    window.location.reload()
   }
 
   const handleAvatarImageUpload = async () => {
@@ -151,12 +157,21 @@
 
 <form>
   <Heading tag="h3" class="mb-6" >Profil Anda</Heading>
-  <div class="mb-6">
-    {#await getUserImageUrl(userData.avatar_url)}
-      <Avatar alt="user image" size="xl" />
+  <div class="flex items-start mb-6">
+    <div class="w-1/6">
+      {#await getUserImageUrl(userData.avatar_url)}
+      <Avatar alt="user image" size="xl" border=true class="1/2"/>
     {:then avatarUrl} 
-      <Avatar alt="user image" src={avatarUrl} size="xl" />
+      <Avatar alt="user image" src={avatarUrl} size="xl" border=true class="1/2"/>
     {/await}
+    </div>
+    <div class="mb-6 mt-6">
+      <Label class="pb-2">Pas Foto (SVG, PNG, JPG atau GIF)</Label>
+      <div class="grid gap-2 mb-6 md:grid-cols-2">
+        <Fileupload class="mb-2" bind:files disabled={uploading}/>
+        <Button color="light" class="w-1/4 h-4/5" disabled={uploading} on:click={handleAvatarImageUpload}>Upload</Button>
+      </div>
+    </div>
   </div>
   <div class="grid gap-6 mb-6 md:grid-cols-2">
     <div>
@@ -197,12 +212,9 @@
     </div>
   </div>
   <div class="mb-6"> 
-    <Label for="course" class="mb-2">Pilih Bootcamp</Label>
-    <select id="course" bind:value={userData.course} required>
-      <option value="frontend">Frontend</option>
-      <option value="backend">Backend</option>
-      <option value="mobile">Mobile</option>
-    </select>
+    <Label for="course" class="mb-2 w-1/2">Kursus Bootcamp
+      <Select bind:value={userData.course} items={bootcampCourses} disabled></Select>
+    </Label>
   </div>
   <!--Show User Other Documents-->
   <div class="mb-6">
@@ -213,7 +225,7 @@
       <Button class="mb-3 w-32" type="button" color="light" on:click={() => window.open(ktpUrl)}>Lihat</Button>
       <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
         <Fileupload id="ktp" class="mb-2" bind:files disable={uploading}/>
-        <Button color="dark" class="w-1/4 h-4/5" disabled={uploading} on:click={handleKtpImageUpload}>Upload</Button>
+        <Button color="light" class="w-1/4 h-4/5" disabled={uploading} on:click={handleKtpImageUpload}>Upload</Button>
       </div>
     {/await}
     <Helper>SVG, PNG, JPG atau GIF.</Helper>
@@ -226,7 +238,7 @@
       <Button class="mb-3 w-32" type="button" color="light" on:click={() => window.open(cvUrl)}>Lihat</Button>
       <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
         <Fileupload id="cv" class="mb-2" bind:files disable={uploading}/>
-        <Button color="dark" class="w-1/4 h-4/5" disabled={uploading} on:click={handleCvUpload}>Upload</Button>
+        <Button color="light" class="w-1/4 h-4/5" disabled={uploading} on:click={handleCvUpload}>Upload</Button>
       </div>
     {/await}
   </div>
@@ -238,7 +250,7 @@
     <Button class="mb-3 w-32" type="button" color="light" on:click={() => window.open(ijazahUrl)}>Lihat</Button>
     <div class="grid gap-2 mb-6 md:grid-cols-2 w-4/5">
       <Fileupload id="ijazah" class="mb-2" bind:files disable={uploading}/>
-      <Button color="dark" class="w-1/4 h-4/5" disabled={uploading} on:click={handleIjazahUpload}>Upload</Button>
+      <Button color="light" class="w-1/4 h-4/5" disabled={uploading} on:click={handleIjazahUpload}>Upload</Button>
     </div>
     {/await}
   </div>
