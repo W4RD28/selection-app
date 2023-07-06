@@ -19,6 +19,28 @@
         .eq("user_id", session?.user?.id)
     }
   }
+  const luluskan = async () => {
+    let loading = true
+    if (testResult.exam_done) {
+      await supabase
+        .from("test_results")
+        .update({
+          exam_result: "lulus"
+        })
+        .eq("user_id", session?.user?.id)
+      
+      let zoomRoom = await supabase
+        .from('interview_room')
+        .insert({
+          user_id: session?.user?.id,
+          room_link: "https://zoom.us/123456789",
+          time: new Date(2023, 7, 10, 10, 10),
+          date: new Date("2023-07-10")
+    })
+    }
+    setTimeout(() => {}, 300)
+    loading = false
+  }
 </script>
 
 <svelte:head>
@@ -48,6 +70,6 @@
   {:else if testResult?.exam_done == null || testResult.exam_done == ""}
   <Button href="/exam/questions/1" on:click={handleWork} class="mt-6 mb-6" color="light">Laksanakan Tes</Button>
   {:else if testResult.exam_done == "selesai"}
-  <Button href="/exam/result" class="mt-6 mb-6" color="light">Lihat Hasil Tes</Button>
+  <Button href="/exam/result" class="mt-6 mb-6" color="light" on:click={luluskan}>Lihat Hasil Tes</Button>
   {/if}
 </div>

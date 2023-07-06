@@ -39,6 +39,7 @@
         alasan,
         harapan,
         akses_laptop,
+        dapat_mengikuti
       }
       const { error } = await supabase
         .from('questionnaire')
@@ -49,14 +50,16 @@
         .from('test_results')
         .insert({
           user_id,
-          administration_result: "selesai"
+          administration_done: "selesai"
         })
     }
     catch (error) {
       alert("Jawaban Anda belum sesuai")
       loading = false
+      return 0
     }
     loading = false
+    location.href = "/questionnaire/thanks"
   }
 </script>
 
@@ -102,5 +105,5 @@
     </Checkbox>
   <Checkbox class="mb-6 space-x-1" required>Saya telah menjawab Tes Administrasi ini dengan jujur.
     </Checkbox>
-  <Button type="submit" color="dark" on:click={handleSubmit} href="/questionnaire/thanks">Submit</Button>
+  <Button type="submit" color="dark" on:click={handleSubmit}>Submit</Button>
 </form>

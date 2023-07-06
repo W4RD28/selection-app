@@ -40,11 +40,11 @@
   {/if}
 
   {#if !testResult}
-  <P></P>
+    <Button href="/questionnaire" class="mt-6 mb-6" color="light">Laksanakan Tes Administrasi</Button>
   {:else if testResult.interview_done != "" || testResult.interview_done != null}
-    <Button color="primary" href="/interview/result">Lihat Hasil Wawancara</Button>
+    <Button color="light" href="/interview/result">Lihat Hasil Wawancara</Button>
   {:else if testResult.interview_done != "" || testResult.interview_done != null}
-    <Button color="primary" href="/interview/result">Lihat Hasil Wawancara</Button>
+    <Button color="light" href="/interview/result">Lihat Hasil Wawancara</Button>
   {/if}
 </div>
 

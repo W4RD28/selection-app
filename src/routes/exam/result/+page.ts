@@ -35,6 +35,7 @@ export const load: PageLoad = async (event) => {
   const examResult = count / examQuestions.length * 100
 
   return {
-    examResult
+    examResult,
+    testResults
   }
 }

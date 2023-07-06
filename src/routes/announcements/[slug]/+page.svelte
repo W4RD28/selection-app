@@ -18,7 +18,7 @@
 <div class="mb-10">
   <Heading tag="h1" class="text-2xl text-center font-semibold mb-3">{announcementData.title}</Heading>
   <Heading class="text-left font-semibold text-sm mb-10">{announcementDate}</Heading>
-  <P class="text-justify">{announcementData.content}</P>
+  <P class="text-justify whitespace-pre-line">{announcementData.content}</P>
 </div>
 
 <div class="items-left">

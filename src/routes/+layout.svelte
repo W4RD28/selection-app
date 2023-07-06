@@ -10,7 +10,7 @@
   import { getUserImageUrl } from "$lib/helper";
 
   export let data : LayoutData
-  
+
   const logOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) console.log("error", error);

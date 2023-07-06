@@ -2,10 +2,20 @@
   import { Button, Heading, P, List, Li } from "flowbite-svelte";
   import type { PageData } from './$types'
   import { onMount } from "svelte";
+  import { supabase } from "$lib/supabaseClient"
 
   export let data: PageData
-  $: ({testResult} = data)
-  onMount(() => console.log(testResult))
+  $: ({testResult, session} = data)
+  const luluskan = async () => {
+    if (testResult.administration_done) {
+      await supabase
+        .from("test_results")
+        .update({
+          administration_result: "lulus"
+        })
+        .eq("user_id", session?.user?.id)
+    }
+  }
 </script>
 
 <svelte:head>
@@ -28,5 +38,10 @@
       <Li>Hasil tes administrasi dijadikan pertimbangan kelayakan peserta</Li>
     </List>
   </div>
-  <Button href="/questionnaire/questions" class="mt-6 mb-6" color="light">Jawab Tes administrasi</Button>
+  <!-- Rendering Kondisional Berdasarkan Pengerjaan -->
+  {#if !session || !testResult}
+  <Button href="/questionnaire/questions" class="mt-6 mb-6" color="light">Jawab Tes Administrasi</Button>
+  {:else if  testResult.administration_done == "selesai"}
+  <Button href="/questionnaire/result" class="mt-6 mb-6" color="light" on:click={luluskan}>Lihat Hasil</Button>
+  {/if}
 </div>
