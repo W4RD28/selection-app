@@ -48,7 +48,7 @@ export const load: PageLoad = async (event) => {
   }
 
   const { data, count } = await supabaseClient.from('questions')
-    .select('*', {count: 'exact'})
+    .select('*', {count: 'exact'}).order('id', { ascending: true })
 
   const { data: examData } = await supabaseClient.from('questions')
     .select('*')
