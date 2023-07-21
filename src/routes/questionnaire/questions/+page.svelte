@@ -82,7 +82,7 @@
     <Radio class="mb-3" name="disability" value="Tidak" bind:group={$disability} required>Tidak</Radio>
   </div>
   <Label class="mb-6" for="disability_type">Jika ya, jenis disabilitas</Label>
-  <Textarea class="mb-6" id="disability_type" disabled={!$checkIfDisabled} bind:value={disability_type}></Textarea>
+  <Textarea class="mb-6" id="disability_type" disabled={$checkIfDisabled} bind:value={disability_type}></Textarea>
   <Label class="mb-6" for="pendapatan">Pendapatan per bulan</Label>
   <div class="mb-6">
     <Radio class="mb-3" name="pendapatan" value="Kurang dari 1 juta" bind:group={pendapatan} required>Kurang dari 1 juta</Radio>

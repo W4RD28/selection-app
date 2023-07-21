@@ -4,9 +4,11 @@
   import type { PageData } from './$types';
   import { getUserImageUrl, getUserKtp, getUserIjazah, getUserCv, generateString } from '$lib/helper';
   import { createEventDispatcher } from 'svelte';
+  import { invalidateAll } from '$app/navigation';
 
   export let data: PageData
   $: ({ session, user, userData } = data)
+
   let files: FileList
   let uploading = false
   let bootcampCourses = [
@@ -23,7 +25,21 @@
       .updateUser({ 
         data: { 
           email: userData.email, 
-          data: userData 
+          data: {
+            first_name: userData.first_name,
+            last_name: userData.last_name,
+            phone_number: userData.phone_number,
+            birth_date: userData.birth_date,
+            nik: userData.nik,
+            kota: userData.kota,
+            kecamatan: userData.kecamatan,
+            kelurahan: userData.kelurahan,
+            course: userData.course,
+            avatar_url: userData.avatar_url,
+            ktp_url: userData.ktp_url,
+            cv_url: userData.cv_url,
+            ijazah_url: userData.ijazah_url,
+          }
         } 
       })
     const { data, error } = await supabase
@@ -34,7 +50,8 @@
       .eq('id', session?.user.id)
       .select()
 
-    window.location.reload()
+    invalidateAll()
+    alert('Profil berhasil diperbarui')
   }
 
   const handleAvatarImageUpload = async () => {
@@ -53,7 +70,7 @@
       }
 
       dispatch('upload')
-      avatar_url = data?.path
+      userData.avatar_url = data?.path
     }
     catch (error){
       if (error instanceof Error) {
@@ -79,9 +96,8 @@
       } else {
         alert('Upload complete')
       }
-
+      userData.ktp_url = data?.path
       dispatch('upload')
-      ktp_url = data?.path
     }
     catch (error){
       if (error instanceof Error) {
@@ -109,7 +125,7 @@
       }
 
       dispatch('upload')
-      cv_url = data?.path
+      userData.cv_url = data?.path
     }
     catch (error){
       if (error instanceof Error) {
@@ -137,7 +153,7 @@
       }
 
       dispatch('upload')
-      ijazah_url = data?.path
+      userData.ijazah_url = data?.path
     }
     catch (error){
       if (error instanceof Error) {
@@ -160,9 +176,13 @@
   <div class="flex items-start mb-6">
     <div class="w-1/6">
       {#await getUserImageUrl(userData.avatar_url)}
-      <Avatar alt="user image" size="xl" border=true class="1/2"/>
-    {:then avatarUrl} 
-      <Avatar alt="user image" src={avatarUrl} size="xl" border=true class="1/2"/>
+      <Avatar size="xl" border={true} class="1/2"/>
+      {:then avatarUrl} 
+      {#if avatarUrl == null}
+      <Avatar size="xl" border={true} class="1/2">{userData.first_name[0] + userData.last_name[0]}</Avatar>
+      {:else}
+      <Avatar src={avatarUrl} size="xl" border={true} class="1/2"/>
+      {/if}
     {/await}
     </div>
     <div class="mb-6 mt-6">
