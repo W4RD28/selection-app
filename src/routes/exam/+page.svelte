@@ -9,7 +9,7 @@
   const handleWork = async () => {
     if (!testResult.exam_done_time) {
       const currentTimeStamp = Date.now();
-      const updatedTimeStamp = currentTimeStamp + 90 * 60 * 1000;
+      const updatedTimeStamp = currentTimeStamp.setMinutes(currentTimeStamp.getMinutes() + 90);
       const updatedDate = new Date(updatedTimeStamp);
       await supabase
         .from("test_results")
