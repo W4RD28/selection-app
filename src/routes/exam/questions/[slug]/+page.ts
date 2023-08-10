@@ -31,11 +31,13 @@ export const load: PageLoad = async (event) => {
       .eq('user_id', session?.user.id)
       throw redirect(302,'/exam/finish-exam')
   } else if (testResult.exam_done_time == null){
+    let newTime: any = currentTime.setHours(currentTime.getHours() + 1)
+    newTime.setMinutes(currentTime.getMinutes() + 30)
     await supabaseClient
       .from('test_results')
       .update(
         {
-          exam_done_time: currentTime + 60 * 60 * 1000
+          exam_done_time: newTime
         }
       )
       .eq('user_id', session?.user.id)
