@@ -30,6 +30,25 @@ export const load: PageLoad = async (event) => {
       )
       .eq('user_id', session?.user.id)
       throw redirect(302,'/exam/finish-exam')
+  } else if (testResult.exam_done_time == null){
+    await supabaseClient
+      .from('test_results')
+      .update(
+        {
+          exam_done_time: currentTime + 60 * 60 * 1000
+        }
+      )
+      .eq('user_id', session?.user.id)
+  } else if (currentTime > examDoneTime){
+    await supabaseClient
+      .from('test_results')
+      .update(
+        {
+          exam_done: 'selesai'
+        }
+      )
+      .eq('user_id', session?.user.id)
+      throw redirect(302,'/exam/finish-exam')
   }
 
   let timeLeft: any = (examDoneTime - currentTime)/ 1000
