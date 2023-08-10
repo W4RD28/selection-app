@@ -100,42 +100,6 @@
         <Img src={getQuestionImage(examData.image)} size="md" alt="Question Image" class="mb-6" />
       {/if}
       <P class="mb-6">{examData.question}</P>
-      <!-- {#if userAnswer == "a"}
-        <Radio bind:group={currentAnswer} checked on:change={upsertUserAnswer} value="a" class="mb-6">
-          {examData.option_a}
-        </Radio>
-      {:else}
-        <Radio bind:group={currentAnswer} on:change={upsertUserAnswer} value="a" class="mb-6">
-          {examData.option_a}
-        </Radio>
-      {/if}
-      {#if userAnswer == "b"}
-        <Radio bind:group={currentAnswer} checked on:change={upsertUserAnswer} value="b" class="mb-6">
-          {examData.option_b}
-        </Radio>
-      {:else}
-        <Radio bind:group={currentAnswer} on:change={upsertUserAnswer} value="b" class="mb-6">
-          {examData.option_b}
-        </Radio>
-      {/if}
-      {#if userAnswer == "c"}
-        <Radio bind:group={currentAnswer} checked on:change={upsertUserAnswer} value="c" class="mb-6">
-          {examData.option_c}
-        </Radio>
-      {:else}
-        <Radio bind:group={currentAnswer} on:change={upsertUserAnswer} value="c" class="mb-6">
-          {examData.option_c}
-        </Radio>
-      {/if}
-      {#if userAnswer == "d"}
-        <Radio bind:group={currentAnswer} checked on:change={upsertUserAnswer} value="d" class="mb-6">
-          {examData.option_d}
-        </Radio>
-      {:else}
-        <Radio bind:group={currentAnswer} on:change={upsertUserAnswer} value="d" class="mb-6">
-          {examData.option_d}
-        </Radio>
-      {/if} -->
       <Radio bind:group={$currentAnswer} value="a" class="mb-6">
         {examData.option_a}
       </Radio>
