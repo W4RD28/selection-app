@@ -43,10 +43,11 @@
 
   const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
 
-  const checkPasswordMatch = (password: string, confirm_password: string) => {
-    if (password == "" || confirm_password == "") return true
-    return password !== confirm_password
-  }
+  $: formIsEmpty = !first_name || !last_name || !email || !phone_number || 
+    !birth_date || !nik || !kota || !kecamatan || !kelurahan || !course || !password || !confirm_password;
+  $: passwordMatch = password == confirm_password;
+  $: consent = false;
+  $: filesAreEmpty = files == undefined;
 
   const handlePasswordInput = (event) => {
     password = event.target.value
@@ -294,9 +295,9 @@
     <Label for="confirm_password" class="mb-2">Konfirmasi Password</Label>
     <Input class="w-1/2" name="confirm_password" type="password" id="confirm_password" bind:value={confirm_password} on:input={handleConfirmPasswordInput} required />
   </div>
-  <Checkbox class="mb-6 space-x-1" required>Semua data yang saya isikan dan tercantum dalam biodata ini adalah benar dan dapat dipertanggungjawabkan secara hukum.
+  <Checkbox class="mb-6 space-x-1" bind:checked={consent}>Semua data yang saya isikan dan tercantum dalam biodata ini adalah benar dan dapat dipertanggungjawabkan secara hukum.
     </Checkbox>
-  <Button type="submit" color="dark" disabled={checkPasswordMatch(password, confirm_password)} on:click={handleRegister} >Register</Button>
+  <Button type="submit" color="dark" disabled={formIsEmpty || !passwordMatch || !consent || filesAreEmpty} on:click={handleRegister} >Register</Button>
   <div class="mb-6 pt-5">
     <A href="/login">Sudah miliki akun? </A>
   </div>

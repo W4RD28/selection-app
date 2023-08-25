@@ -8,13 +8,14 @@
 
   const handleWork = async () => {
     if (!testResult.exam_done_time) {
-      const currentTimeStamp = Date.now();
-      const updatedTimeStamp = currentTimeStamp.setMinutes(currentTimeStamp.getMinutes() + 90);
-      const updatedDate = new Date(updatedTimeStamp);
+      // add 120 minutes to current time
+      let date = new Date()
+      let examDoneTime = new Date().setTime(date.getTime() + 2 * 60 * 60 * 1000)
       await supabase
         .from("test_results")
         .update({
-          exam_done_time: updatedDate
+          exam_done_time: new Date(examDoneTime),
+          exam_done: "sedang"
         })
         .eq("user_id", session?.user?.id)
     }

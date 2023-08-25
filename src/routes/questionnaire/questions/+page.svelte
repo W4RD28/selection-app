@@ -27,6 +27,10 @@
     return false
   })
 
+  $: honesty = false;
+  $: checkIfFormIsFilled = disability && category && pendapatan && alasan && harapan && honesty;
+
+
   const handleSubmit = async () => {
     try {
       loading = true
@@ -103,7 +107,7 @@
   </div>
   <Checkbox class="mb-6 space-x-1" required bind:checked={dapat_mengikuti}>Saya dapat mengikuti seluruh kegiatan bootcamp.
     </Checkbox>
-  <Checkbox class="mb-6 space-x-1" required>Saya telah menjawab Tes Administrasi ini dengan jujur.
+  <Checkbox class="mb-6 space-x-1" bind:checked={honesty} required>Saya telah menjawab Tes Administrasi ini dengan jujur.
     </Checkbox>
-  <Button type="submit" color="dark" on:click={handleSubmit}>Submit</Button>
+  <Button type="submit" color="dark" disabled={!checkIfFormIsFilled} on:click={handleSubmit}>Submit</Button>
 </form>

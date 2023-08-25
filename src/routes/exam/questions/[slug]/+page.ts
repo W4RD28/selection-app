@@ -20,28 +20,8 @@ export const load: PageLoad = async (event) => {
   if (testResult.administration_result == null){
     throw redirect(302,'/questionnaire')
   }
-  if (testResult.exam_done != null){
-    await supabaseClient
-      .from('test_results')
-      .update(
-        {
-          exam_done: 'selesai'
-        }
-      )
-      .eq('user_id', session?.user.id)
-      throw redirect(302,'/exam/finish-exam')
-  } else if (testResult.exam_done_time == null){
-    let newTime: any = currentTime.setHours(currentTime.getHours() + 1)
-    newTime.setMinutes(currentTime.getMinutes() + 30)
-    await supabaseClient
-      .from('test_results')
-      .update(
-        {
-          exam_done_time: newTime
-        }
-      )
-      .eq('user_id', session?.user.id)
-  } else if (currentTime > examDoneTime){
+  
+  if (currentTime > examDoneTime){
     await supabaseClient
       .from('test_results')
       .update(

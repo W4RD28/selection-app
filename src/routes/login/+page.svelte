@@ -6,6 +6,7 @@
   let loading = false
   let email: string
   let password: string
+  $: formIsEmpty = !email || !password;
   
   const handleLogin = async() => {
     try {
@@ -46,7 +47,7 @@
       <div class="mb-6">
         <Checkbox id="remember" >Ingat saya</Checkbox>
       </div>
-      <Button type="submit" color="primary" on:click={handleLogin}>Login</Button>
+      <Button type="submit" color="primary" disabled={formIsEmpty} on:click={handleLogin}>Login</Button>
       <div class="pt-5">
         <A href="/register">Belum miliki akun? </A>
       </div>
