@@ -54,6 +54,12 @@
   <P class="mb-6 text-red-700">Status: Anda belum melakukan tes administrasi</P>
   {:else if testResult.exam_done == null}
   <P class="mb-6 text-red-700">Status: Anda belum melakukan tes tertulis</P>
+  {:else if testResult.exam_done != null && testResult.exam_done == "sedang"}
+  <P class="mb-6">Status: Anda sedang melakukan tes tertulis</P>
+  {:else if testResult.exam_done == "selesai" && testResult.exam_result == "tidak lulus"}
+  <P class="mb-6">Status: Anda telah melakukan tes tertulis dan tidak lulus</P>
+  {:else if testResult.exam_done == "selesai" && testResult.exam_result == "lulus" && testResult.interview_done == null}
+  <P class="mb-6">Status: Anda telah melakukan tes tertulis dan lulus</P>
   {:else}
   <P class="mb-6">Status: Anda telah melakukan tes tertulis</P>
   {/if}
@@ -68,6 +74,8 @@
   </div>
   {#if !testResult}
   <Button href="/questionnaire" class="mt-6 mb-6" color="light">Laksanakan Tes Administrasi</Button>
+  {:else if testResult.administration_result == "tidak lulus"}
+  <P></P>
   {:else if testResult?.exam_done == null || testResult.exam_done == ""}
   <Button href="/exam/questions/1" on:click={handleWork} class="mt-6 mb-6" color="light">Laksanakan Tes</Button>
   {:else if testResult.exam_done == "selesai"}

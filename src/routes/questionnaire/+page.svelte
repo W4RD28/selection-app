@@ -26,7 +26,11 @@
   <Heading tag="h2" class="mb-6">Halaman Tes Administrasi</Heading>
   {#if !testResult}
   <P class="mb-6 text-red-700">Status: Anda belum menjawab tes administrasi</P>
-  {:else}
+  {:else if testResult.administration_done == "selesai" && testResult.administration_result == "tidak lulus"}
+  <P class="mb-6">Status: Anda telah menjawab tes administrasi dan tidak lulus</P>
+  {:else if testResult.administration_done == "selesai" && testResult.administration_result == "lulus"}
+  <P class="mb-6">Status: Anda telah menjawab tes administrasi dan lulus</P>
+  {:else if testResult.administration_done != null}
   <P class="mb-6">Status: Anda telah menjawab tes administrasi</P>
   {/if}
   <div class="mb-6">

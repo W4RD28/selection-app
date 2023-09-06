@@ -218,11 +218,11 @@
   <Heading tag="h3" class="mb-6" >Daftar Bootcamp</Heading>
   <div class="grid gap-6 mb-6 md:grid-cols-2">
     <div>
-      <Label for="first_name" class="mb-2">Nama Pertama</Label>
+      <Label for="first_name" class="mb-2">Nama Awal</Label>
       <Input type="text" id="first_name" bind:value={first_name} required  />
     </div>
     <div>
-      <Label for="last_name" class="mb-2">Nama Terakhir</Label>
+      <Label for="last_name" class="mb-2">Nama Akhir</Label>
       <Input type="text" id="last_name" bind:value={last_name} required />
     </div>
     <div>

@@ -23,8 +23,10 @@
   <P class="mb-6 text-red-700">Status: Anda belum melakukan tes administrasi</P>
   {:else if testResult.exam_done == null}
   <P class="mb-6 text-red-700">Status: Anda belum melakukan tes tertulis</P>
-  {:else if testResult.exam_done == "selesai"}
-  <P class="mb-6">Status: Anda telah melakukan tes tertulis</P>
+  {:else if testResult.exam_done == "selesai" && testResult.exam_result == "tidak lulus"}
+  <P class="mb-6">Status: Anda telah melakukan tes tertulis dan tidak lulus</P>
+  {:else if testResult.exam_done == "selesai" && testResult.exam_result == "lulus" && testResult.interview_done == null}
+  <P class="mb-6">Status: Anda telah melakukan tes tertulis dan lulus</P>
   {:else}
   <P class="mb-6">Status: Anda telah melakukan tes wawancara</P>
   {/if}
@@ -38,7 +40,7 @@
     </List>
   </div>
   
-  {#if testResult != null && testResult.exam_done == "selesai"}
+  {#if testResult != null && testResult.exam_result == "lulus"}
   {#if interviewData == null}
   <Heading tag="h4" class="mb-3">Wawancara Anda akan dilaksanakan pada tanggal berikut</Heading>
   <P class="mb-3">Tanggal: Kamis, 24 Juli 2023</P>
@@ -54,10 +56,18 @@
   {/if}
   {:else if testResult != null && testResult.exam_done == null}
   <P class="mb-6">Anda belum melakukan tes tertulis</P>
+  {:else if testResult != null && testResult.exam_result == "tidak lulus"}
+  <P class="mb-6"></P>
   {/if}
 
   {#if !testResult}
     <Button href="/questionnaire" class="mt-6 mb-6" color="light">Laksanakan Tes Administrasi</Button>
+  {:else if testResult.exam_done == "" || testResult.exam_done == null}
+    <Button href="/questionnaire" class="mt-6 mb-6" color="light">Laksanakan Tes Administrasi</Button>
+  {:else if testResult.exam_done == "selesai"}
+    <P></P>
+  {:else if testResult.exam_result == "tidak lulus"}
+    <P></P>
   {:else if testResult.interview_done != "" || testResult.interview_done != null}
     <Button color="light" href="/interview/result">Lihat Hasil Wawancara</Button>
   {:else if testResult.interview_done != "" || testResult.interview_done != null}
